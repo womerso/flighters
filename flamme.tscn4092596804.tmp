@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://xgx2ndsnmgkv"]
+
+[ext_resource type="Script" uid="uid://bmwqubgvgxdq0" path="res://flamme.gd" id="1_taji2"]
+[ext_resource type="PackedScene" uid="uid://c1ctd67kvisri" path="res://Sword.tscn" id="2_odnnb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nh15l"]
+radius = 0.6
+
+[node name="Flamme" type="CharacterBody3D" unique_id=1197638507]
+script = ExtResource("1_taji2")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1765582406]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+size = Vector3(1, 2, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1653680906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.037777066)
+shape = SubResource("CapsuleShape3D_nh15l")
+
+[node name="FlameSword" parent="." unique_id=231155906 instance=ExtResource("2_odnnb")]
+transform = Transform3D(-1.4418925, 1.285942e-07, -0.41345608, 0.41345608, -1.807274e-08, -1.4418925, -1.285942e-07, -1.5, -1.807274e-08, 0.7964157, 1.1281123, 0)

@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://b4acg2ut3fwwg"]
+
+[ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="1_u52ul"]
+[ext_resource type="PackedScene" uid="uid://xgx2ndsnmgkv" path="res://flamme.tscn" id="2_vonw3"]
+[ext_resource type="Script" uid="uid://bxd01q2dv5s8r" path="res://bad.gd" id="3_oi3di"]
+
+[node name="Level" type="Node3D" unique_id=1456923665]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1258387341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.39616, 16.055494)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1257816693]
+transform = Transform3D(0.73046833, 0, 0.6829466, -0.36583668, 0.84442496, 0.39129275, -0.57669723, -0.53567386, 0.61682564, 3.4556665, 7.1627774, 2.2554402)
+
+[node name="Ground" parent="." unique_id=1548052312 instance=ExtResource("1_u52ul")]
+transform = Transform3D(0.99978423, 0, 0.020770825, 0, 1, 0, -0.020770825, 0, 0.99978423, 0.0724349, 0.68544316, 0.37860394)
+
+[node name="Flamme" parent="." unique_id=1197638507 instance=ExtResource("2_vonw3")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -0.456609, 2.0307996, 0.4114585)
+
+[node name="Bad Flamme" parent="." unique_id=2062058070 instance=ExtResource("2_vonw3")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 5.1983852, 2.0307996, 0.4114585)
+script = ExtResource("3_oi3di")
+
+[connection signal="connect" from="Flamme" to="Bad Flamme" method="_on_flamme_connect"]

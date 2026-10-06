@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://c1ctd67kvisri"]
+
+[ext_resource type="PackedScene" uid="uid://txnj2b8s2blx" path="res://naraphim_sword1.blend" id="1_reexh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
+size = Vector3(0.19116211, 1, 1.2088623)
+
+[node name="Node3D" type="StaticBody3D" unique_id=231155906]
+
+[node name="naraphim_sword1" parent="." unique_id=1693117633 instance=ExtResource("1_reexh")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=52054419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.005493164, 0, -0.7608032)
+shape = SubResource("BoxShape3D_nh15l")
+disabled = true
+
+[node name="CollisionShape3D2" type="CSGBox3D" parent="." unique_id=1387347706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00076293945, 0, -0.7811279)
+size = Vector3(0.13031006, 1, 1.2191162)

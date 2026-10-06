@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://hx7jl71r16qs"]
+
+[ext_resource type="Texture2D" uid="uid://b0hswavtlnu7n" path="res://icon.svg" id="1_lvfgl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nh15l"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cumkg"]
+albedo_texture = ExtResource("1_lvfgl")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eyggb"]
+
+[sub_resource type="Animation" id="Animation_xy6y1"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_lvfgl"]
+resource_name = "new_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ugki7"]
+_data = {
+&"RESET": SubResource("Animation_xy6y1"),
+&"new_animation": SubResource("Animation_lvfgl")
+}
+
+[node name="Character_wind" type="CharacterBody3D" unique_id=918955191]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1476461415]
+shape = SubResource("CapsuleShape3D_nh15l")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=466423817]
+material_override = SubResource("StandardMaterial3D_cumkg")
+material = SubResource("StandardMaterial3D_eyggb")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=741679404]
+libraries/ = SubResource("AnimationLibrary_ugki7")

@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://xgx2ndsnmgkv"]
+
+[ext_resource type="Script" uid="uid://bmwqubgvgxdq0" path="res://flamme.gd" id="1_taji2"]
+[ext_resource type="PackedScene" uid="uid://bpe42bqr2i6a0" path="res://flamme_body_animated.tscn" id="2_iowp4"]
+[ext_resource type="PackedScene" uid="uid://c1ctd67kvisri" path="res://Sword.tscn" id="2_odnnb"]
+[ext_resource type="Script" uid="uid://crp2mn6nrg5ph" path="res://sword.gd" id="3_a1isn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nh15l"]
+radius = 0.6
+height = 3.5512695
+
+[node name="Flamme" type="CharacterBody3D" unique_id=1197638507 node_paths=PackedStringArray("pivot", "model")]
+script = ExtResource("1_taji2")
+pivot = NodePath("Pivot")
+model = NodePath("Pivot/male_body")
+
+[node name="Pivot" type="Node3D" parent="." unique_id=671332003]
+
+[node name="male_body" parent="Pivot" unique_id=1608648392 instance=ExtResource("2_iowp4")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="FlameSword" parent="Pivot" unique_id=231155906 instance=ExtResource("2_odnnb")]
+transform = Transform3D(-1.4418925, 1.285942e-07, -0.41345608, 0.41345608, -1.807274e-08, -1.4418925, -1.285942e-07, -1.5, -1.807274e-08, 0.7964157, 1.1281123, 0)
+visible = false
+script = ExtResource("3_a1isn")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Pivot" unique_id=1921961413]
+visible = false
+
+[node name="BodyCollision" type="CollisionShape3D" parent="." unique_id=1653680906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7756348, 0.037777066)
+shape = SubResource("CapsuleShape3D_nh15l")
+
+[connection signal="animate" from="." to="Pivot/male_body" method="_on_flamme_animate"]
+[connection signal="attack" from="." to="Pivot/male_body" method="_on_flamme_attack"]
+[connection signal="down_n" from="." to="Pivot/male_body" method="_on_flamme_down_n"]
+[connection signal="down_n" from="." to="Pivot/FlameSword" method="_on_flamme_down_n"]
+[connection signal="end_attack" from="." to="Pivot/male_body" method="_on_flamme_end_attack"]
+[connection signal="end_jump" from="." to="Pivot/male_body" method="_on_flamme_end_jump"]
+[connection signal="jump" from="." to="Pivot/male_body" method="_on_flamme_jump"]
+[connection signal="move_right" from="." to="Pivot/male_body" method="_on_flamme_move_right"]
+[connection signal="side_n" from="." to="Pivot/FlameSword" method="_on_flamme_side_n"]
+[connection signal="up_n" from="." to="Pivot/FlameSword" method="_on_flamme_up_n"]
+[connection signal="attack_finish" from="Pivot/male_body" to="." method="_on_male_body_attack_finish"]
+[connection signal="connect" from="Pivot/male_body" to="." method="_on_male_body_connect"]
