@@ -5,6 +5,7 @@ extends Node3D
 
 var playback
 var is_attacking = false
+var is_hanging = false
 signal attack_finish
 signal connect
 # Called when the node enters the scene tree for the first time.
@@ -18,12 +19,12 @@ func get_anim_state():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var cn = get_anim_state()
-	#print(is_attacking)
+	print(cn)
 	if cn == "Backflip":
 		rotation_degrees.y = 90
 	pass
 func update_animation_params(dir:Vector2):
-	if not is_attacking:
+	if not is_attacking and not is_hanging:
 		if dir.y > .7:
 			if abs(dir.x) < 0.1:
 				anim_tree.set("parameters/conditions/is_crouched", true)
@@ -120,4 +121,21 @@ func _on_flamme_end_up_b() -> void:
 
 
 func _on_flamme_crouched() -> void:
+	pass # Replace with function body.
+
+
+func _on_flamme_ledge() -> void:
+	is_hanging = true
+	anim_tree.set("parameters/conditions/hang", true)
+	anim_tree.set("parameters/conditions/is_idle", false)
+	anim_tree.set("parameters/conditions/up_b", false)
+	anim_tree.set("parameters/conditions/double_jump", false)
+	anim_tree.set("parameters/conditions/is_jump", false)
+	pass # Replace with function body.
+
+
+func _on_flamme_end_ledge() -> void:
+	is_hanging = false
+	anim_tree.set("parameters/conditions/hang", false)
+	anim_tree.set("parameters/conditions/is_idle", true)
 	pass # Replace with function body.

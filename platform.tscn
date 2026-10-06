@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://cxudiews1416i"]
+
+[ext_resource type="Script" uid="uid://b4rs3kgncc1mj" path="res://platform.gd" id="1_mi635"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8yqoa"]
+size = Vector3(4, 0.1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1dc58"]
+size = Vector3(1, 0.5625, 1)
+
+[node name="Platform" type="StaticBody3D" unique_id=1021640525]
+script = ExtResource("1_mi635")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1825655574]
+size = Vector3(4, 0.1, 1)
+
+[node name="Platform" type="CollisionShape3D" parent="." unique_id=1470874282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018272996, 0)
+shape = SubResource("BoxShape3D_8yqoa")
+disabled = true
+
+[node name="ledge_grab_left" type="Area3D" parent="." unique_id=1485958188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3375722, -0.0018173456, 0)
+
+[node name="ledge_grab_left_box" type="CollisionShape3D" parent="ledge_grab_left" unique_id=1984975760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31164885, -0.058972, 0)
+shape = SubResource("BoxShape3D_1dc58")
+
+[node name="ledge_grab_right" type="Area3D" parent="." unique_id=229717166]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9990363, -0.0036346912, 0)
+
+[node name="ledge_grab_right_box" type="CollisionShape3D" parent="ledge_grab_right" unique_id=1276591781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7931914, -0.058972, 0)
+shape = SubResource("BoxShape3D_1dc58")
+
+[connection signal="body_exited" from="ledge_grab_left" to="." method="_on_ledge_grab_left_body_exited"]
+[connection signal="body_exited" from="ledge_grab_right" to="." method="_on_ledge_grab_right_body_exited"]

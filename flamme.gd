@@ -15,9 +15,12 @@ var attack_buffer = []
 var attack_lag = 0
 var special_type = ""
 var in_special = false
+var is_hanging = false
 var special_lag = 0
 signal connect
 signal crouched
+signal ledge
+signal end_ledge
 signal attack
 signal up_n
 signal down_n
@@ -34,8 +37,10 @@ signal idle
 var was_on_floor = false
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and not is_hanging:
 		velocity +=  GRAVITY * delta
+	if not is_on_floor() and is_hanging:
+		velocity.y = 0
 		
 
 	# Handle jump.
@@ -62,6 +67,9 @@ func _physics_process(delta: float) -> void:
 	#print(input_dir)
 	if direction and not attacking and abs(input_dir.x) > 0.2:
 		var move_dir := transform.basis.x * input_dir.x
+		if is_hanging:
+			is_hanging = false
+			end_ledge.emit()
 		
 		if input_dir.y > .5:
 			velocity.x = move_dir.x * SPEED * .5
@@ -138,4 +146,11 @@ func _on_male_body_attack_finish() -> void:
 func _on_male_body_connect(name) -> void:
 	if attacking:
 		connect.emit(name)
+	pass # Replace with function body.
+
+
+func _on_platform_ledge_grab(nme) -> void:
+	if nme == name:
+		ledge.emit()
+		is_hanging = true
 	pass # Replace with function body.

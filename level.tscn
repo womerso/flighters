@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://xgx2ndsnmgkv" path="res://flamme.tscn" id="2_vonw3"]
 [ext_resource type="Script" uid="uid://bxd01q2dv5s8r" path="res://bad.gd" id="3_oi3di"]
+[ext_resource type="PackedScene" uid="uid://cxudiews1416i" path="res://platform.tscn" id="4_0b4ue"]
 
 [node name="Level" type="Node3D" unique_id=1456923665]
 
@@ -22,4 +23,8 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -0.456609, 
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 5.1983852, 2.0307996, 0.4114585)
 script = ExtResource("3_oi3di")
 
+[node name="Platform" parent="." unique_id=165142478 instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5498435, 6.9320216, 0)
+
 [connection signal="connect" from="Flamme" to="Bad Flamme" method="_on_flamme_connect"]
+[connection signal="ledge_grab" from="Platform" to="Flamme" method="_on_platform_ledge_grab"]
