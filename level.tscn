@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://bpe42bqr2i6a0" path="res://flamme_body_animated.tscn" id="3_oi3di"]
-[ext_resource type="PackedScene" uid="uid://cxudiews1416i" path="res://platform.tscn" id="4_0b4ue"]
 
 [node name="Level" type="Node3D" unique_id=1456923665]
 
@@ -15,8 +14,8 @@ transform = Transform3D(0.73046833, 0, 0.6829466, -0.36583668, 0.84442496, 0.391
 [node name="Ground" parent="." unique_id=1548052312 instance=ExtResource("1_u52ul")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.0724349, 0.68544316, 0.37860394)
 
-[node name="Platform" parent="." unique_id=165142478 instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5498435, 6.9320216, 0)
-
-[node name="Flamme" parent="." unique_id=1608648392 instance=ExtResource("3_oi3di")]
+[node name="Flamme" parent="." unique_id=1608648392 node_paths=PackedStringArray("platforms") instance=ExtResource("3_oi3di")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+platforms = NodePath("../Ground/Platforms")
+
+[editable path="Ground"]

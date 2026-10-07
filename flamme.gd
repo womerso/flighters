@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var pivot: Node3D
 @export var hitbox: CollisionShape3D
 @export var anim_tree: AnimationTree
-
+@export var platforms: Node3D
 const SPEED = 10.0
 const JUMP_VELOCITY = 10
 const W_ATTACK_VEL = 23
@@ -57,6 +57,7 @@ func _physics_process(delta: float) -> void:
 	if  is_on_floor() and (jump_count != 0 or (in_special and special_type=="UP")):
 		jump_count = 0
 		jump = false
+		double_jump = false
 		end_jump.emit()
 	if Input.is_action_just_pressed("jump") and jump_count < MAX_JUMP:
 		jump = true
@@ -107,7 +108,7 @@ func _physics_process(delta: float) -> void:
 			if input_dir.y < 0:
 				up_n.emit(-1)
 			else:
-				if attack_lag < 50:
+				if not attacking:
 					print("swing")
 					attacking = true
 					if attack_count < 3:
@@ -128,6 +129,13 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY * 2
 			up_b.emit()
 
+	for child in platforms.get_children():
+		if velocity.y > 0:
+			add_collision_exception_with(child)
+		else:
+			if child.is_player_above(self):
+				print(child.is_player_above(self))
+				remove_collision_exception_with(child)
 			
 			
 	
@@ -143,7 +151,7 @@ func _physics_process(delta: float) -> void:
 	if attack_lag > 0:
 		attack_lag-=1
 	if attack_lag < 20:
-		anim_tree.set("parameters/conditions/attack_%d" % attack_count , false)
+		attacking = not attacking
 	if attack_lag == 0:
 		attacking = false
 		attack_count = 0
@@ -159,7 +167,6 @@ func _physics_process(delta: float) -> void:
 	
 	anim_tree.set("parameters/conditions/landed", not jump)
 	anim_tree.set("parameters/conditions/crouch_move", crouched and not idle)
-	print(attack_count)
 	
 func _on_attack() -> void:
 	pass # Replace with function body.
