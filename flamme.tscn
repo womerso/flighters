@@ -9,10 +9,11 @@
 radius = 0.6
 height = 3.5512695
 
-[node name="Flamme" type="CharacterBody3D" unique_id=1197638507 node_paths=PackedStringArray("pivot", "model")]
+[node name="Flamme" type="CharacterBody3D" unique_id=1197638507 node_paths=PackedStringArray("pivot", "model", "hitbox")]
 script = ExtResource("1_taji2")
 pivot = NodePath("Pivot")
 model = NodePath("Pivot/male_body")
+hitbox = NodePath("BodyCollision")
 
 [node name="Pivot" type="Node3D" parent="." unique_id=671332003]
 

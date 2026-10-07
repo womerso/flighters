@@ -1,7 +1,9 @@
 extends CharacterBody3D
 
 @export var pivot: Node3D
-@export var model: Node3D
+@export var hitbox: CollisionShape3D
+@export var anim_tree: AnimationTree
+
 const SPEED = 10.0
 const JUMP_VELOCITY = 10
 const W_ATTACK_VEL = 23
@@ -18,7 +20,7 @@ var in_special = false
 var is_hanging = false
 var special_lag = 0
 signal connect
-signal crouched
+var crouched = true
 signal ledge
 signal end_ledge
 signal attack
@@ -29,16 +31,22 @@ signal end_up_b
 signal die
 signal side_n
 signal animate
-signal jump
 signal end_jump
 signal end_attack
 signal move_right
-signal idle
+var idle = false
+var jump = false
 var was_on_floor = false
+var double_jump = false
+var landed =false
+func get_anim_state():
+	return anim_tree.get("parameters/playback").get_current_node()
+
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor() and not is_hanging:
 		velocity +=  GRAVITY * delta
+		
 	if not is_on_floor() and is_hanging:
 		velocity.y = 0
 		
@@ -48,11 +56,14 @@ func _physics_process(delta: float) -> void:
 		in_special = false
 	if  is_on_floor() and (jump_count != 0 or (in_special and special_type=="UP")):
 		jump_count = 0
+		jump = false
 		end_jump.emit()
 	if Input.is_action_just_pressed("jump") and jump_count < MAX_JUMP:
-		jump.emit()
+		jump = true
 		jump_count+=1
 		if jump_count == MAX_JUMP:
+			anim_tree.set("parameters/BackFlip/TimeSeek/seek_request", 0.6)
+			double_jump = true
 			velocity.y = JUMP_VELOCITY * 1.5
 		else:
 			velocity.y = JUMP_VELOCITY
@@ -66,42 +77,47 @@ func _physics_process(delta: float) -> void:
 	var direction := (transform.basis * Vector3(input_dir.x, 0, 0)).normalized()
 	#print(input_dir)
 	if direction and not attacking and abs(input_dir.x) > 0.2:
+		
 		var move_dir := transform.basis.x * input_dir.x
 		if is_hanging:
 			is_hanging = false
 			end_ledge.emit()
 		
 		if input_dir.y > .5:
+			idle = false
 			velocity.x = move_dir.x * SPEED * .5
 		else:
+			idle = false
 			velocity.x = move_dir.x * SPEED
 		
 		
 		pivot.rotation.y = 3*PI/2 if input_dir.x < 0 else PI/2
 	elif direction and not attacking and abs(input_dir.x) < 2:
-		crouched.emit()
+		crouched =true
 
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 	if input_dir.y > 0 and not is_on_floor():
 			velocity +=  GRAVITY * delta
 	if velocity.x == 0 and not attacking:
-		idle.emit()
+		idle = true
 	if Input.is_action_just_pressed("attack") and not in_special: 
 		
 			print(input_dir)
 			if input_dir.y < 0:
 				up_n.emit(-1)
 			else:
-				if not attacking:
+				if attack_lag < 50:
 					print("swing")
 					attacking = true
-					if "Sword" in model.get_anim_state() and attack_count < 3:
-						attack_count += 1
+					if attack_count < 3:
+						attack_count+=1
 					else:
 						attack_count = 1
-					attack.emit(attack_count)
+					
+					anim_tree.set("parameters/conditions/attack_%d" % attack_count, attacking)
 					attack_lag = 45
+				
 	if Input.is_action_just_pressed("special") and not in_special:
 		in_special = true
 		special_lag = 60
@@ -126,31 +142,37 @@ func _physics_process(delta: float) -> void:
 			end_up_b.emit()
 	if attack_lag > 0:
 		attack_lag-=1
-	if  attack_lag < 30 and attacking:
-		attacking=not attacking
+	if attack_lag < 20:
+		anim_tree.set("parameters/conditions/attack_%d" % attack_count , false)
 	if attack_lag == 0:
 		attacking = false
-		end_attack.emit()
+		attack_count = 0
+		anim_tree.set("parameters/conditions/attack_1" , false)
 		
+		
+	anim_tree.set("parameters/conditions/is_idle", idle)
+	anim_tree.set("parameters/conditions/is_moving", not idle)
 
+
+	anim_tree.set("parameters/conditions/double_jump", double_jump)
+	anim_tree.set("parameters/conditions/is_jump", jump)
+	
+	anim_tree.set("parameters/conditions/landed", not jump)
+	anim_tree.set("parameters/conditions/crouch_move", crouched and not idle)
+	print(attack_count)
+	
 func _on_attack() -> void:
 	pass # Replace with function body.
 
 
-func _on_male_body_attack_finish() -> void:
-	print(attack_lag)
-	attacking = false
-	pass # Replace with function body.
 
 
-func _on_male_body_connect(name) -> void:
-	if attacking:
-		connect.emit(name)
-	pass # Replace with function body.
 
 
-func _on_platform_ledge_grab(nme) -> void:
+func _on_platform_ledge_grab(nme,pos) -> void:
 	if nme == name:
+		print("HANGD")
 		ledge.emit()
 		is_hanging = true
+		position.y = pos.y - hitbox.shape.height
 	pass # Replace with function body.

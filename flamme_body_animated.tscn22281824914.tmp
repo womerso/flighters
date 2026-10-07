@@ -136,31 +136,31 @@ advance_condition = &"attack_3"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7tyr5"]
 switch_mode = 2
 advance_mode = 2
-advance_condition = &"is_idle"
+advance_expression = "not attacking and is_idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6o7y1"]
 switch_mode = 2
 advance_mode = 2
-advance_condition = &"is_moving"
+advance_expression = "not attacking and is_moving"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dca2o"]
 switch_mode = 2
 advance_mode = 2
-advance_condition = &"is_idle"
+advance_expression = "not attacking and is_idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ddo45"]
 advance_mode = 2
-advance_condition = &"is_moving"
+advance_expression = "not attacking and is_moving"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i62ky"]
 switch_mode = 2
 advance_mode = 2
-advance_condition = &"is_idle"
+advance_expression = "not attacking and is_idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4hklp"]
 switch_mode = 2
 advance_mode = 2
-advance_condition = &"is_moving"
+advance_expression = "not attacking and is_moving"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_paasm"]
 advance_mode = 2
@@ -286,7 +286,7 @@ states/Sword_Regular_C/position = Vector2(414.40887, -61.284653)
 states/UPB/node = SubResource("AnimationNodeAnimation_rm53x")
 states/UPB/position = Vector2(-47.591125, 467)
 transitions = ["Start", "Idle_A", SubResource("AnimationNodeStateMachineTransition_srroo"), "Idle_A", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_vsly7"), "Idle_A", "Sprint", SubResource("AnimationNodeStateMachineTransition_i7nax"), "Jump_Start", "Jump_air", SubResource("AnimationNodeStateMachineTransition_r65xg"), "Jump_air", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_rm53x"), "Jump_Land", "Idle_A", SubResource("AnimationNodeStateMachineTransition_0weew"), "Jump_Land", "Sprint", SubResource("AnimationNodeStateMachineTransition_fx21v"), "Sprint", "Idle_A", SubResource("AnimationNodeStateMachineTransition_m7deo"), "Sprint", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_b6np5"), "Jump_Start", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_47dk5"), "Jump_Land", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_xbuf8"), "Jump_air", "BackFlip", SubResource("AnimationNodeStateMachineTransition_d2tew"), "BackFlip", "Jump_air", SubResource("AnimationNodeStateMachineTransition_ymd2p"), "BackFlip", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_pg2he"), "Jump_Start", "BackFlip", SubResource("AnimationNodeStateMachineTransition_5eqnl"), "Sword_Regular_A", "Sword_Regular_B", SubResource("AnimationNodeStateMachineTransition_khax6"), "Sword_Regular_B", "Sword_Regular_C", SubResource("AnimationNodeStateMachineTransition_iaeel"), "Sword_Regular_A", "Idle_A", SubResource("AnimationNodeStateMachineTransition_7tyr5"), "Sword_Regular_A", "Sprint", SubResource("AnimationNodeStateMachineTransition_6o7y1"), "Sword_Regular_B", "Idle_A", SubResource("AnimationNodeStateMachineTransition_dca2o"), "Sword_Regular_B", "Sprint", SubResource("AnimationNodeStateMachineTransition_ddo45"), "Sword_Regular_C", "Idle_A", SubResource("AnimationNodeStateMachineTransition_i62ky"), "Sword_Regular_C", "Sprint", SubResource("AnimationNodeStateMachineTransition_4hklp"), "Sprint", "Sword_Regular_A", SubResource("AnimationNodeStateMachineTransition_paasm"), "Idle_A", "Sword_Regular_A", SubResource("AnimationNodeStateMachineTransition_v5lxm"), "Jump_Start", "UPB", SubResource("AnimationNodeStateMachineTransition_3yn0x"), "Jump_air", "UPB", SubResource("AnimationNodeStateMachineTransition_pguq3"), "BackFlip", "UPB", SubResource("AnimationNodeStateMachineTransition_hesft"), "UPB", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_a1u4y"), "UPB", "Jump_air", SubResource("AnimationNodeStateMachineTransition_qeliu"), "Idle_A", "UPB", SubResource("AnimationNodeStateMachineTransition_jhqdh"), "Sprint", "UPB", SubResource("AnimationNodeStateMachineTransition_rvyho"), "Idle_A", "Crouch_Idle", SubResource("AnimationNodeStateMachineTransition_e45un"), "Sprint", "Crouch_Idle", SubResource("AnimationNodeStateMachineTransition_yvv0j"), "Crouch_Idle", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_yt5n0"), "Crouch_Walk", "Crouch_Idle", SubResource("AnimationNodeStateMachineTransition_5eqwk"), "Crouch_Walk", "Sprint", SubResource("AnimationNodeStateMachineTransition_hxwmv"), "Crouch_Walk", "Idle_A", SubResource("AnimationNodeStateMachineTransition_34d74"), "Crouch_Idle", "Idle_A", SubResource("AnimationNodeStateMachineTransition_c6b6a"), "Sprint", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_vse2i"), "Idle_A", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_xx738"), "Jump_Start", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_3dm8k"), "UPB", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_ceikp"), "Jump_air", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_5i4aj"), "BackFlip", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_v2840"), "Ledge_Hang", "Idle_A", SubResource("AnimationNodeStateMachineTransition_1scf1")]
-graph_offset = Vector2(-271.53098, -71.56009)
+graph_offset = Vector2(-319.53098, -72.56009)
 
 [node name="Flamme" unique_id=1608648392 node_paths=PackedStringArray("pivot", "hitbox", "anim_tree") instance=ExtResource("1_pjerm")]
 transform = Transform3D(0.39073107, 0, 0.92050487, 0, 1, 0, -0.92050487, 0, 0.39073107, 0, 0, 0)

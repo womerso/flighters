@@ -19,7 +19,7 @@ func get_anim_state():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var cn = get_anim_state()
-	print(cn)
+	#print(cn)
 	if cn == "Backflip":
 		rotation_degrees.y = 90
 	pass

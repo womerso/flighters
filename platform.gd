@@ -13,10 +13,10 @@ func _process(delta: float) -> void:
 
 
 func _on_ledge_grab_left_body_exited(body: Node3D) -> void:
-	ledge_grab.emit(body.name)
+	ledge_grab.emit(body.name,position)
 	pass # Replace with function body.
 
 
 func _on_ledge_grab_right_body_exited(body: Node3D) -> void:
-	ledge_grab.emit(body.name)
+	ledge_grab.emit(body.name, position)
 	pass # Replace with function body.
