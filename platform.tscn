@@ -1,24 +1,29 @@
 [gd_scene format=3 uid="uid://cxudiews1416i"]
 
 [ext_resource type="Script" uid="uid://b4rs3kgncc1mj" path="res://platform.gd" id="1_mi635"]
+[ext_resource type="Script" uid="uid://bfacaqtbfuvq1" path="res://bottom.gd" id="2_s8bxr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8yqoa"]
-size = Vector3(4, 0.1494873, 1)
+size = Vector3(4, 0.1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1dc58"]
 size = Vector3(1.2856445, 0.5625, 1)
 
-[node name="Platform" type="StaticBody3D" unique_id=1021640525 node_paths=PackedStringArray("platform_box")]
+[sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
+size = Vector3(4, 1, 1)
+
+[node name="Platform" type="StaticBody3D" unique_id=1021640525 node_paths=PackedStringArray("plat_col", "area")]
 script = ExtResource("1_mi635")
-platform_box = NodePath("Area3D")
+plat_col = NodePath("Platform")
+area = NodePath("Bottom")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1825655574]
 layers = 9
 size = Vector3(4, 0.1, 1)
 
 [node name="Platform" type="CollisionShape3D" parent="." unique_id=1470874282]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018272996, 0)
 shape = SubResource("BoxShape3D_8yqoa")
+disabled = true
 
 [node name="ledge_grab_left" type="Area3D" parent="." unique_id=1485958188]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3375722, -0.0018173456, 0)
@@ -36,16 +41,15 @@ collision_layer = 8
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7931914, -0.058972, 0)
 shape = SubResource("BoxShape3D_1dc58")
 
-[node name="Area3D" type="Area3D" parent="." unique_id=1297608830]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2142452, 0)
-collision_layer = 4
+[node name="Bottom" type="Area3D" parent="." unique_id=1273624536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.062983036, 0)
 collision_mask = 2
+script = ExtResource("2_s8bxr")
 
-[node name="Platform" type="CollisionShape3D" parent="Area3D" unique_id=854154421]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.18269321, 0)
-shape = SubResource("BoxShape3D_8yqoa")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bottom" unique_id=2038167207]
+shape = SubResource("BoxShape3D_nh15l")
 
 [connection signal="body_exited" from="ledge_grab_left" to="." method="_on_ledge_grab_left_body_exited"]
 [connection signal="body_exited" from="ledge_grab_right" to="." method="_on_ledge_grab_right_body_exited"]
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
-[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]
+[connection signal="body_entered" from="Bottom" to="." method="_on_bottom_body_entered"]
+[connection signal="body_exited" from="Bottom" to="." method="_on_bottom_body_exited"]
