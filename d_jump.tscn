@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://bxiqbh73q21uo"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wwxdi"]
+load_path = "res://.godot/imported/shock.png-67643e32aa50636a7a85023253f1c0c6.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mbd8q"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("CompressedTexture2D_wwxdi")
+emission_enabled = true
+emission_energy_multiplier = 5.89
+
+[sub_resource type="Curve" id="Curve_i7mu7"]
+_data = [Vector2(0, 1), 0.0, -1.4970821, 0, 1, Vector2(0.47385624, 0.29059827), 0.0, 0.0, 0, 0, Vector2(0.99999994, 0.034188032), -0.48733884, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_oomm5"]
+curve = SubResource("Curve_i7mu7")
+
+[sub_resource type="Curve" id="Curve_us8sx"]
+_data = [Vector2(0, 0), 0.0, 1.4300871, 0, 1, Vector2(0.6633987, 0.94871795), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.1523525, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_o3w2l"]
+curve = SubResource("Curve_us8sx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7fwyx"]
+gravity = Vector3(0, 0, 0)
+scale_min = 1.5
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_o3w2l")
+color = Color(1.723, 1.723, 1.723, 1)
+alpha_curve = SubResource("CurveTexture_oomm5")
+
+[sub_resource type="QuadMesh" id="QuadMesh_cv7r3"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_a4p8j"]
+gravity = Vector3(0, 0, 0)
+scale_min = 1.5
+scale_max = 4.0
+scale_curve = SubResource("CurveTexture_o3w2l")
+color = Color(1.723, 1.723, 1.723, 1)
+alpha_curve = SubResource("CurveTexture_oomm5")
+
+[node name="d_jump" type="Node3D" unique_id=1646664945]
+
+[node name="Shockwave" type="GPUParticles3D" parent="." unique_id=1614068587]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.22290349, 0)
+material_override = SubResource("StandardMaterial3D_mbd8q")
+emitting = false
+amount = 2
+lifetime = 0.4
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_7fwyx")
+draw_pass_1 = SubResource("QuadMesh_cv7r3")
+
+[node name="Shockwave2" type="GPUParticles3D" parent="." unique_id=255299]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -0.010838389, 0)
+material_override = SubResource("StandardMaterial3D_mbd8q")
+emitting = false
+amount = 1
+lifetime = 0.4
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_a4p8j")
+draw_pass_1 = SubResource("QuadMesh_cv7r3")

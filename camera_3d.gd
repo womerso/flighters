@@ -10,5 +10,5 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	position.y = move_toward(position.y, 100, SPEED * delta) 
+	#position.y = move_toward(position.y, 100, SPEED * delta) 
 	pass

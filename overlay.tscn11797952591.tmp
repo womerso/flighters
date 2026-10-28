@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://tkaf3iuing11"]
+
+[ext_resource type="Script" uid="uid://bmgttvpj1n1xu" path="res://overlay.gd" id="1_nv86q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
+size = Vector3(100, 1, 100)
+
+[node name="overlay" type="Node3D" unique_id=1228735558]
+script = ExtResource("1_nv86q")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1105035010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.396, 13)
+
+[node name="Area3D" type="Area3D" parent="." unique_id=834456425]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1568416805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.636643, 0)
+shape = SubResource("BoxShape3D_nh15l")
+
+[node name="p1_health" type="Label3D" parent="." unique_id=273576957]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6503215, 4.294882, 7.8041344)
+pixel_size = 0.01
+text = "0.0%
+"
+font_size = 64
+
+[node name="p2_health" type="Label3D" parent="." unique_id=1158430554]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65, 4.295, 7.804)
+pixel_size = 0.01
+text = "0.0%
+"
+font_size = 64

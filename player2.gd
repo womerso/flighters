@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var hitbox: CollisionShape3D
 @export var anim_tree: AnimationTree
 @export var platforms: Node3D
+@onready var hit_part: Node3D = $_impact
 const SPEED = 10.0
 const JUMP_VELOCITY = 12
 const W_ATTACK_VEL = 23
@@ -185,15 +186,34 @@ func _physics_process(delta: float) -> void:
 	anim_tree.set("parameters/conditions/is_jump", jump)
 	anim_tree.set("parameters/conditions/in_air", not is_on_floor())
 	
+	anim_tree.set("parameters/conditions/end_neutral", not in_special and special_type == "n")
+	
 	anim_tree.set("parameters/conditions/landed", not jump and is_on_floor())
 	
-	
-func _on_attack() -> void:
+
+
+func _on_sword_box_body_exited(body: Node3D) -> void:
+	if attacking:
+		
+		attack_connect.emit(body.name,pivot.rotation_degrees.y, 11, 0.01 if attack_count < 3 else 1.5)
+	pass # Replace with function body.
 	pass # Replace with function body.
 
 
-
-
+func on_hit( y_rot, base_damage: float, base_knockback):
+			total_damage+=base_damage * d_scale
+			pivot.rotation_degrees.y = y_rot * -1
+			print(total_damage)
+			knockback = base_knockback * Vector3(sign(cos(deg_to_rad(y_rot))) * total_damage / 50,0, 0.0)
+			print(knockback)
+			if (abs(knockback.x) > 1.0):
+				anim_tree.get("parameters/playback").start("Hit_Knockback")
+			else:
+				anim_tree.get("parameters/playback").start("Hit_Chest")
+			for child in hit_part.get_children():
+				print(child)
+				child.restart()
+			stun = 10
 
 func _on_flamme_attack_connect(target, y_rot, base_damage: float, base_knockback) -> void:
 	
@@ -201,16 +221,5 @@ func _on_flamme_attack_connect(target, y_rot, base_damage: float, base_knockback
 	print(target, ' ', name, ' ', y_rot, ' ', pivot.rotation_degrees.y)
 	if target== name:
 		if not is_shield:
-			
-			
-			total_damage+=base_damage * d_scale
-			pivot.rotation_degrees.y = y_rot * -1
-			print(total_damage)
-			knockback = base_knockback * Vector3(sign(cos(deg_to_rad(y_rot))) + total_damage / 25,0, 0.0)
-			print(knockback)
-			if (abs(knockback.x) > 1.0):
-				anim_tree.get("parameters/playback").start("Hit_Knockback")
-			else:
-				anim_tree.get("parameters/playback").start("Hit_Chest")
-			stun = 10
+			on_hit(y_rot, base_damage, base_knockback)
 	pass # Replace with function body.

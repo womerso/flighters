@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://dus8i43ic345n"]
+
+[ext_resource type="Texture2D" uid="uid://dhjf7oaoypmgr" path="res://Textures/flash.png" id="1_qr0c1"]
+[ext_resource type="Texture2D" uid="uid://0wj5dw8yeebl" path="res://Textures/flare.png" id="2_1fnef"]
+[ext_resource type="Texture2D" uid="uid://cv8o5jlep7yes" path="res://Textures/shock.png" id="3_lmopc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4r3aq"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_qr0c1")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_trerd"]
+_data = [Vector2(0, 1), 0.0, -1.0, 0, 1, Vector2(0.99999994, 0), -1.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_2te0t"]
+curve = SubResource("Curve_trerd")
+
+[sub_resource type="Curve" id="Curve_evexo"]
+_data = [Vector2(0, 0), 0.0, 1.4300871, 0, 1, Vector2(0.6633987, 0.94871795), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.1523525, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_o3w2l"]
+curve = SubResource("Curve_evexo")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nh15l"]
+gravity = Vector3(0, 0, 0)
+scale_min = 3.0
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_o3w2l")
+color = Color(0.6568584, 1.545415, 1.723, 1)
+alpha_curve = SubResource("CurveTexture_2te0t")
+
+[sub_resource type="QuadMesh" id="QuadMesh_xbh0h"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pe5lw"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_1fnef")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_kgvwl"]
+_data = [Vector2(0, 1), 0.0, -1.4970821, 0, 1, Vector2(0.47385624, 0.29059827), 0.0, 0.0, 0, 0, Vector2(0.99999994, 0.034188032), -0.48733884, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_oomm5"]
+curve = SubResource("Curve_kgvwl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_r3j5s"]
+gravity = Vector3(0, 0, 0)
+scale_min = 3.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_o3w2l")
+color = Color(0.66068333, 1.5527366, 1.674595, 1)
+alpha_curve = SubResource("CurveTexture_oomm5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x2oq6"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_lmopc")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nl7ed"]
+gravity = Vector3(0, 0, 0)
+scale_min = 1.5
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_o3w2l")
+color = Color(1.722882, 1.3527999, 0, 0.047058824)
+alpha_curve = SubResource("CurveTexture_oomm5")
+
+[node name="_impact" type="Node3D" unique_id=1104713614]
+
+[node name="Flash" type="GPUParticles3D" parent="." unique_id=1143067412]
+visible = false
+material_override = SubResource("StandardMaterial3D_4r3aq")
+emitting = false
+amount = 1
+lifetime = 0.09999999999999999
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_nh15l")
+draw_pass_1 = SubResource("QuadMesh_xbh0h")
+
+[node name="Flare" type="GPUParticles3D" parent="." unique_id=2076530054]
+material_override = SubResource("StandardMaterial3D_pe5lw")
+emitting = false
+amount = 1
+lifetime = 0.2
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_r3j5s")
+draw_pass_1 = SubResource("QuadMesh_xbh0h")
+
+[node name="Shockwave" type="GPUParticles3D" parent="." unique_id=1966511065]
+material_override = SubResource("StandardMaterial3D_x2oq6")
+emitting = false
+amount = 1
+lifetime = 0.4
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_nl7ed")
+draw_pass_1 = SubResource("QuadMesh_xbh0h")
