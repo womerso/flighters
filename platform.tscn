@@ -7,10 +7,10 @@
 size = Vector3(4, 0.1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1dc58"]
-size = Vector3(1.2856445, 0.5625, 1)
+size = Vector3(0.5091553, 0.5625, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
-size = Vector3(4, 1, 1)
+size = Vector3(4, 0.8881073, 1)
 
 [node name="Platform" type="StaticBody3D" unique_id=1021640525 node_paths=PackedStringArray("plat_col", "area")]
 script = ExtResource("1_mi635")
@@ -23,30 +23,32 @@ size = Vector3(4, 0.1, 1)
 
 [node name="Platform" type="CollisionShape3D" parent="." unique_id=1470874282]
 shape = SubResource("BoxShape3D_8yqoa")
-disabled = true
 
 [node name="ledge_grab_left" type="Area3D" parent="." unique_id=1485958188]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3375722, -0.0018173456, 0)
 collision_layer = 8
+collision_mask = 3841
 
 [node name="ledge_grab_left_box" type="CollisionShape3D" parent="ledge_grab_left" unique_id=1984975760]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4544711, -0.058972, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91204894, -0.058972, 0)
 shape = SubResource("BoxShape3D_1dc58")
 
 [node name="ledge_grab_right" type="Area3D" parent="." unique_id=229717166]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9990363, -0.0036346912, 0)
 collision_layer = 8
+collision_mask = 3841
 
 [node name="ledge_grab_right_box" type="CollisionShape3D" parent="ledge_grab_right" unique_id=1276591781]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7931914, -0.058972, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.181436, -0.058972, 0)
 shape = SubResource("BoxShape3D_1dc58")
 
 [node name="Bottom" type="Area3D" parent="." unique_id=1273624536]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.062983036, 0)
-collision_mask = 2
+collision_mask = 3842
 script = ExtResource("2_s8bxr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bottom" unique_id=2038167207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2918625, 0)
 shape = SubResource("BoxShape3D_nh15l")
 
 [connection signal="body_exited" from="ledge_grab_left" to="." method="_on_ledge_grab_left_body_exited"]

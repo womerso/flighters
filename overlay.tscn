@@ -12,6 +12,7 @@ script = ExtResource("1_nv86q")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.396, 13)
 
 [node name="Area3D" type="Area3D" parent="." unique_id=834456425]
+collision_mask = 3847
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1568416805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.636643, 0)
@@ -30,3 +31,5 @@ pixel_size = 0.01
 text = "0.0%
 "
 font_size = 64
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

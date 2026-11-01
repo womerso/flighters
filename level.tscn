@@ -1,31 +1,40 @@
 [gd_scene format=3 uid="uid://b4acg2ut3fwwg"]
 
 [ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="1_u52ul"]
+[ext_resource type="Script" uid="uid://4pcl3m17lqaq" path="res://platforms.gd" id="2_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://bpe42bqr2i6a0" path="res://flamme_body_animated.tscn" id="3_oi3di"]
-[ext_resource type="Script" uid="uid://b3xklnsum3t01" path="res://player2.gd" id="4_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://tkaf3iuing11" path="res://overlay.tscn" id="4_f2txt"]
 
 [node name="Level" type="Node3D" unique_id=1456923665]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1257816693]
 transform = Transform3D(0.73046833, 0, 0.6829466, -0.36583668, 0.84442496, 0.39129275, -0.57669723, -0.53567386, 0.61682564, 3.4556665, 7.1627774, 2.2554402)
+shadow_enabled = true
 
 [node name="Ground" parent="." unique_id=1548052312 instance=ExtResource("1_u52ul")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.0724349, 0.68544316, 0.37860394)
 
+[node name="Platforms" parent="Ground" index="2" unique_id=670145773]
+script = ExtResource("2_0b4ue")
+
 [node name="Flamme" parent="." unique_id=1608648392 node_paths=PackedStringArray("platforms") instance=ExtResource("3_oi3di")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 2.904235, 1.3842471, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4.253624, 5.8079557, 0.612257)
+player_id = 1
 platforms = NodePath("../Ground/Platforms")
 
-[node name="Flamme2" parent="." unique_id=237391979 node_paths=PackedStringArray("platforms") instance=ExtResource("3_oi3di")]
+[node name="Flamme2" parent="." unique_id=237391979 instance=ExtResource("3_oi3di")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 11.347712, 1.8632109, 0)
-script = ExtResource("4_0b4ue")
-platforms = NodePath("../Ground/Platforms")
+player_id = 2
 
 [node name="overlay" parent="." unique_id=1228735558 node_paths=PackedStringArray("p1", "p2") instance=ExtResource("4_f2txt")]
 p1 = NodePath("../Flamme")
 p2 = NodePath("../Flamme2")
 
+[connection signal="ledge_grab" from="Ground/Platforms" to="Flamme" method="_on_platforms_ledge_grab"]
+[connection signal="ledge_grab" from="Ground/Platforms" to="Flamme2" method="_on_platforms_ledge_grab"]
 [connection signal="attack_connect" from="Flamme" to="Flamme2" method="_on_flamme_attack_connect"]
+[connection signal="attack_connect" from="Flamme2" to="Flamme" method="_on_flamme_2_attack_connect"]
+[connection signal="plane_entered" from="overlay" to="Flamme" method="_on_overlay_plane_entered"]
+[connection signal="plane_entered" from="overlay" to="Flamme2" method="_on_overlay_plane_entered"]
 
 [editable path="Ground"]

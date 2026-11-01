@@ -6,7 +6,7 @@ extends CharacterBody3D
 @export var platforms: Node3D
 @onready var hit_part: Node3D = $_impact
 const SPEED = 10.0
-const JUMP_VELOCITY = 12
+const JUMP_VELOCITY = 18
 const W_ATTACK_VEL = 23
 const ATTACK_LAG = 20
 const GRAVITY = Vector3(0,-20,0)
@@ -64,7 +64,7 @@ func _physics_process(delta: float) -> void:
 		if jump_count == MAX_JUMP:
 			anim_tree.set("parameters/BackFlip/TimeSeek/seek_request", 0.6)
 			double_jump = true
-			velocity.y = JUMP_VELOCITY * 1.5
+			velocity.y = JUMP_VELOCITY  
 		else:
 			velocity.y = JUMP_VELOCITY
 	
