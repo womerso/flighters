@@ -9,7 +9,7 @@ size = Vector3(100, 1, 100)
 script = ExtResource("1_nv86q")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1105035010]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.396, 13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.396, 19.342562)
 
 [node name="Area3D" type="Area3D" parent="." unique_id=834456425]
 collision_mask = 3847
@@ -19,14 +19,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.636643, 0)
 shape = SubResource("BoxShape3D_nh15l")
 
 [node name="p1_health" type="Label3D" parent="." unique_id=273576957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6503215, 4.294882, 7.8041344)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6503215, 4.294882, 14.146696)
 pixel_size = 0.01
 text = "0.0%
 "
 font_size = 64
 
 [node name="p2_health" type="Label3D" parent="." unique_id=1158430554]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65, 4.295, 7.804)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65, 4.295, 14.146562)
 pixel_size = 0.01
 text = "0.0%
 "

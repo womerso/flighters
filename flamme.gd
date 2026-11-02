@@ -6,7 +6,7 @@ extends CharacterBody3D
 @export var platforms: Node3D
 @onready var hit_part: Node3D = $_impact
 @onready var jump_part: Node3D = $d_jump
-@onready var neutral_attack: Area3D = $"Skinned Mesh 0/Neutral"
+@onready var neutral_attack: Area3D = $"male_body/Skinned Mesh 0/Neutral"
 
 const SPEED = 10.0
 const JUMP_VELOCITY = 18 #Was 12
@@ -17,6 +17,7 @@ const MAX_JUMP = 2
 const HEIGHT_OFFSET = 0.2
 signal attack_connect
 
+var proj_sword: Area3D
 var knockback: Vector3
 var stun = 0
 var jump_count = 0
@@ -49,7 +50,8 @@ var respawn_pos: Vector3
 var is_shield = false
 var d_scale = 1.0
 var total_damage = 0
-
+@export var thrown_sword_scene: PackedScene
+@onready var held_sword = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"
 func _ready():
 	set_collision_layer_value(player_id +8, true)
 
@@ -154,7 +156,7 @@ func _physics_process(delta: float) -> void:
 			attacking=true
 			
 			special_type = "UP"
-			velocity.y = JUMP_VELOCITY * 1.5
+			#velocity.y = JUMP_VELOCITY * 1.5
 			up_b = true
 		elif input_dir.x != 0:
 			special_lag = -1
@@ -228,6 +230,8 @@ func _physics_process(delta: float) -> void:
 		landing_lag-=1
 	if special_lag > 0:
 		special_lag-=1
+		if special_type == "UP":
+			proj_sword.rotation_degrees.x = move_toward(proj_sword.rotation_degrees.x, 720, delta)
 	if special_lag ==0 and in_special:
 		if special_type == "UP":
 			up_b = false
@@ -305,7 +309,18 @@ func _on_sword_box_body_exited(body: Node3D) -> void:
 		attack_connect.emit(body.name,pivot.rotation_degrees.y, 5 + attack_count, 10.01 if attack_count < 3 else 1.5)
 	pass # Replace with function body.
 
-
+func execute_throw():
+	held_sword.hide() # Make the hand weapon invisible
+	
+	# Spawn the flying weapon
+	var projectile = thrown_sword_scene.instantiate()
+	get_tree().root.add_child(projectile) # Add it to the world, not the player
+	
+	# Snap the flying weapon to the exact position and angle of the hand weapon
+	projectile.global_transform = held_sword.global_transform
+	
+	proj_sword = projectile
+	
 func _on_flamme_attack_connect(target, base_damage: float) -> void:
 	# Flamme 2 being hit
 	print(target, ' ', name)
