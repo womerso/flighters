@@ -18,6 +18,7 @@ const HEIGHT_OFFSET = 0.2
 const ROT_SPEED = 2000
 signal attack_connect
 
+var midcheck = false
 var hit_ticks = 0
 var proj_sword: Area3D = null
 var knockback: Vector3
@@ -57,6 +58,7 @@ var respawn_pos: Vector3
 var is_shield = false
 var d_scale = 1.0
 var maintain_air = false
+var smash_charge = 1.0
 var total_damage = 0
 @export var thrown_sword_scene: PackedScene
 @onready var held_sword = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"
@@ -102,7 +104,7 @@ func _physics_process(delta: float) -> void:
 	var input_dir := Input.get_vector("left_p%d" % player_id, "right_p%d" % player_id, "up_p%d" % player_id, "down_p%d" % player_id)
 	var direction := (transform.basis * Vector3(input_dir.x, 0, 0)).normalized()
 	#print(input_dir)
-	if direction  and abs(input_dir.x) > 0.2 and landing_lag <1 and not (in_special and special_type=="SIDE"):
+	if direction  and abs(input_dir.x) > 0.2 and landing_lag <1 and not (in_special and (special_type=="SIDE" or special_type=="UP" or special_type == "N")) and not attack_type == "side_charge":
 		
 		var move_dir := transform.basis.x * input_dir.x
 		
@@ -143,27 +145,51 @@ func _physics_process(delta: float) -> void:
 		idle = true
 	if Input.is_action_just_pressed("attack_p%d" % player_id) and not in_special and landing_lag < 1: 
 		if  is_on_floor():
-			print("attack")
-			if combo_window > 0:
-				anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
+			if input_dir.x != 0:
+				anim_tree.get("parameters/playback").start("forward_smash_charge")
+				attack_type = "side_charge"
+				attack_lag = -1
+			elif input_dir.y != 0:
+				anim_tree.get("parameters/playback").start("up_smash_charge")
+				attack_type = "up_charge"
+				attack_lag = -1
+			else:
+				print("attack")
+				if combo_window > 0:
+					anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
+					
+					if attack_count > 2:
+						attack_count = 1
+					else:
+						attack_count+=1
 				
-				if attack_count > 2:
-					attack_count = 1
-				else:
-					attack_count+=1
-			
-			anim_tree.set("parameters/conditions/attack_%d" % attack_count, true)
-			attacking = true
-			attack_type = "neutral_%d" % attack_count
-			attack_lag = 15
-			combo_window = 45
+				anim_tree.set("parameters/conditions/attack_%d" % attack_count, true)
+				attacking = true
+				attack_type = "neutral_%d" % attack_count
+				attack_lag = 15
+				combo_window = 45
 		else:
 			anim_tree.get("parameters/playback").start("air_neutral")
 			attacking = true
 			attack_lag = 15
 			combo_window = 45
 			attack_type = "neutral_air"
-
+	if Input.is_action_pressed("attack_p%d" % player_id):
+		if smash_charge <= 3:
+			smash_charge += 0.03
+		
+	if Input.is_action_just_released("attack_p%d" % player_id):
+		print("uhhh ", attack_type)
+		if attack_type == "side_charge":
+			attacking = true
+			
+			print('hello')
+			anim_tree.get("parameters/playback").start("forward_smash_end")
+			attack_lag = 15
+		if attack_type == "up_charge":
+			attacking = true
+			anim_tree.get("parameters/playback").start("up_smash_end")
+			attack_lag = 15
 				
 	if Input.is_action_just_pressed("special_p%d" % player_id) and not in_special and landing_lag < 1:
 		in_special = true
@@ -264,7 +290,10 @@ func _physics_process(delta: float) -> void:
 		special_lag-=1
 		if special_type == "UP":
 			if proj_sword != null:
-			
+				if not midcheck:
+					for body in proj_sword.get_overlapping_bodies():
+							_on_sword_box_body_exited(body)
+					midcheck = true
 				proj_sword.rotation_degrees.z += delta * ROT_SPEED
 				proj_sword.position.y = move_toward(proj_sword.position.y , proj_sword.position.y  + JUMP_VELOCITY, 12 * delta)
 
@@ -275,11 +304,14 @@ func _physics_process(delta: float) -> void:
 					up_b_vy = velocity.y
 					is_jumping_b = false
 					maintain_air = false
+					
 	if special_lag ==0 and in_special:
 		if special_type == "UP":
 			print("ending")
 			up_b = false
 			in_special = false
+			if proj_sword:
+				rejoin_sword(self)
 		if special_type == "SIDE":
 			in_special = false
 	if in_special and special_type == "N":
@@ -287,13 +319,20 @@ func _physics_process(delta: float) -> void:
 		if hit_ticks % 2 == 0:
 			for body in neutral_attack.get_overlapping_bodies():
 				attack_connect.emit(body.name,pivot.rotation_degrees.y, 1, 0.1, attack_type)
-	print(attack_lag)
+	
 	if attack_lag > 0:
+		if not midcheck:
+			for body in held_sword.get_overlapping_bodies():
+					_on_sword_box_body_exited(body)
+			midcheck = true
 		attack_lag-=1
-	
-	
-	elif attacking and not ( in_special and special_type == "SIDE"):
+
+	elif attacking and not ( in_special and special_type == "SIDE") :
+		print(attack_type)
 		attacking = false
+		attack_type = ""
+		print("clear")
+		midcheck=false
 		anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
 	if combo_window > 0:
 		combo_window-=1
@@ -316,7 +355,10 @@ func _physics_process(delta: float) -> void:
 	elif needs_respawn:
 		respawn(respawn_pos)
 		needs_respawn = false
-
+	if attack_type == "side_charge" or attack_type == "up_charge" :
+		for body in held_sword.get_overlapping_bodies():
+				_on_sword_box_body_exited(body)
+	
 	if in_special and special_type == "UP":
 		attacking = true
 	if not attacking:
@@ -336,7 +378,7 @@ func _physics_process(delta: float) -> void:
 	
 	anim_tree.set("parameters/conditions/landed", not jump and is_on_floor())
 	anim_tree.set("parameters/conditions/hang", is_hanging)
-	print(attacking)
+
 func land():
 	landing_lag = 15
 
@@ -347,18 +389,26 @@ func on_hit( y_rot, base_damage, kb_mult, at):
 			total_damage+=base_damage * d_scale
 			pivot.rotation_degrees.y = y_rot * -1
 			print(total_damage)
-		
+			print(at)
 			if at == "up_b":
 				knockback = Vector3(0.0, 15.0,0.0)
 			if at == "side_b":
-				knockback = Vector3(12.0, 1.0,0.0)
+				knockback = kb_mult * Vector3(12.0, 1.0,0.0)
 			if at == "neutral_b":
 				knockback = Vector3(0.0, 0.0,0.0)
 				iframes = 8
-			if at == "neutral_1":
+			if at == "neutral_1" or at == "neutral_2":
+				iframes = 1
+			if at == "neutral_3":
 				iframes = 16
-				knockback = Vector3(1.0, 1.0,0.0)
-			
+				knockback = Vector3(12.0, 3.0,0.0)
+			if at == "side_charge":
+				iframes = 16
+				knockback = Vector3(10 * kb_mult, 2.0 * kb_mult, 0.0)
+			if at == "up_charge":
+				iframes = 16
+				knockback = Vector3(1.0, 10 * kb_mult, 0.0)
+			knockback.x *= sign(cos(deg_to_rad(y_rot))) 
 			#knockback = (total_damage / 50.0 )*Vector3(sign(cos(deg_to_rad(y_rot))) * base_knockback,1.0, 0.0)
 			print(knockback)
 			if (abs(knockback.x) > 1.0):
@@ -372,6 +422,7 @@ func on_hit( y_rot, base_damage, kb_mult, at):
 func respawn(pos):
 	position = Vector3(0.0, pos.y, 0.0)
 	velocity = Vector3.ZERO
+	total_damage = 0
 	pass
 	
 func _on_sword_box_body_exited(body: Node3D) -> void:
@@ -380,6 +431,8 @@ func _on_sword_box_body_exited(body: Node3D) -> void:
 		print("connect")
 		if attack_type == "side_b":
 			side_kb = side_charge
+		if attack_type == "side_charge" or attack_type == "up_charge":
+			side_kb = smash_charge
 		
 		attack_connect.emit(body.name,pivot.rotation_degrees.y, 5 + attack_count, side_kb, attack_type)
 	pass # Replace with function body.
@@ -458,4 +511,5 @@ func rejoin_sword(body: Node3D) -> void:
 		velocity.y = 0.0;
 		maintain_air = true
 	proj_sword.queue_free()
+	proj_sword = null
 	pass # Replace with function body.

@@ -32,6 +32,7 @@ collision_mask = 3841
 [node name="ledge_grab_left_box" type="CollisionShape3D" parent="ledge_grab_left" unique_id=1984975760]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.91204894, -0.058972, 0)
 shape = SubResource("BoxShape3D_1dc58")
+disabled = true
 
 [node name="ledge_grab_right" type="Area3D" parent="." unique_id=229717166]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9990363, -0.0036346912, 0)
@@ -41,6 +42,7 @@ collision_mask = 3841
 [node name="ledge_grab_right_box" type="CollisionShape3D" parent="ledge_grab_right" unique_id=1276591781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.181436, -0.058972, 0)
 shape = SubResource("BoxShape3D_1dc58")
+disabled = true
 
 [node name="Bottom" type="Area3D" parent="." unique_id=1273624536]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.062983036, 0)
