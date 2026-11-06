@@ -4,8 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://02p5lydf0bam" path="res://ground_solid.tscn" id="2_rd0yq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eyggb"]
-albedo_color = Color(1, 0.13333334, 1, 1)
-metallic = 0.88
+albedo_color = Color(0.2890193, 0.12731099, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
 size = Vector3(37.16931, 0.15, 5)
@@ -13,8 +12,8 @@ size = Vector3(37.16931, 0.15, 5)
 [node name="Boundary" type="StaticBody3D" unique_id=879918400]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1663699791]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.60668945, -3.997168, 0)
-size = Vector3(68.354004, 8.144336, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11608887, -3.997168, 0)
+size = Vector3(37.453857, 8.144336, 5)
 material = SubResource("StandardMaterial3D_eyggb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2069380299]

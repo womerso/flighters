@@ -15,9 +15,10 @@ const ATTACK_LAG = 20
 const GRAVITY = Vector3(0,-25,0)
 const MAX_JUMP = 2
 const HEIGHT_OFFSET = 0.2
+const ROT_SPEED = 2000
 signal attack_connect
 
-var proj_sword: Area3D
+var proj_sword: Area3D = null
 var knockback: Vector3
 var stun = 0
 var jump_count = 0
@@ -45,6 +46,7 @@ var neutral_stam = 1
 var special_dir: int
 var side_charge: float = 0
 var needs_respawn = false
+var is_jumping_b = false
 var respawn_count = 0
 var respawn_pos: Vector3
 var is_shield = false
@@ -60,8 +62,10 @@ func get_anim_state():
 
 func _physics_process(delta: float) -> void:
 	# Handle jump.
-	if is_on_floor() and in_special and special_type == "UP":
-		in_special = false
+	if is_on_floor() and in_special and special_type == "UP" :
+		#in_special = false	
+		pass
+		
 	if  is_on_floor() and (jump_count != 0 or (in_special and special_type=="UP")):
 		jump_count = 0
 		jump = false
@@ -154,7 +158,7 @@ func _physics_process(delta: float) -> void:
 		
 		if input_dir.y < 0:
 			attacking=true
-			
+			special_lag = 100
 			special_type = "UP"
 			#velocity.y = JUMP_VELOCITY * 1.5
 			up_b = true
@@ -231,10 +235,22 @@ func _physics_process(delta: float) -> void:
 	if special_lag > 0:
 		special_lag-=1
 		if special_type == "UP":
-			proj_sword.rotation_degrees.x = move_toward(proj_sword.rotation_degrees.x, 720, delta)
+			print("proj sword: ", proj_sword)
+			if proj_sword != null:
+			
+				proj_sword.rotation_degrees.z += delta * ROT_SPEED
+				proj_sword.position.y = move_toward(proj_sword.position.y , proj_sword.position.y  + JUMP_VELOCITY, 10 * delta)
+				print("huh")
+				if is_jumping_b:
+					proj_sword.body_entered.connect(rejoin_sword)
+					print("i do be jumping")
+					velocity.y += JUMP_VELOCITY * 2
+					is_jumping_b = false
 	if special_lag ==0 and in_special:
 		if special_type == "UP":
+			print("ending")
 			up_b = false
+			in_special = false
 		if special_type == "SIDE":
 			in_special = false
 	if attack_lag > 0:
@@ -348,7 +364,7 @@ func _on_neutral_body_entered(body: Node3D) -> void:
 
 
 func _on_platforms_ledge_grab(body,gposition, dir) -> void:
-	if body.name == name and position.y + hitbox.shape.get("height") < gposition.y:
+	if body.name == name and position.y + hitbox.shape.get("height") < gposition.y and not up_b:
 		print(gposition.y, "  ", position.y )
 		hang_pos = gposition.y
 		velocity.y = 0
@@ -363,4 +379,21 @@ func _on_overlay_plane_entered(body,pos) -> void:
 		respawn_pos = pos
 		needs_respawn = true
 	
+	pass # Replace with function body.
+func begin_jump():
+	print("Jump")
+	print(special_lag)
+	is_jumping_b = true
+
+
+
+
+
+func rejoin_sword(body: Node3D) -> void:
+	print("attempt join")
+	print(body.name, " ", name)
+	if body.name == name:
+		print("correct join")
+		held_sword.show()
+		get_tree().root.remove_child(proj_sword)
 	pass # Replace with function body.

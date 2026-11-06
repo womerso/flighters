@@ -17,21 +17,27 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.0724349, 
 [node name="Platforms" parent="Ground" index="2" unique_id=670145773]
 script = ExtResource("2_0b4ue")
 
+[node name="Solid2" parent="Ground/Solid Ground" parent_id_path=PackedInt32Array(1548052312, 766703551) index="1" unique_id=1306702211]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 13.478107, 30.702415, 0)
+
 [node name="overlay" parent="." unique_id=1228735558 node_paths=PackedStringArray("p1", "p2") instance=ExtResource("4_f2txt")]
 p1 = NodePath("../Flamme")
 p2 = NodePath("../Flamme2")
 
 [node name="Flamme" parent="." unique_id=667861679 instance=ExtResource("4_0b4ue")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.7513778, 0)
+collision_layer = 5
+collision_mask = 5
 player_id = 1
 
 [node name="Flamme2" parent="." unique_id=851777768 instance=ExtResource("4_0b4ue")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4.3630185, 1.6654942, 0)
+collision_layer = 5
+collision_mask = 5
 player_id = 2
 
 [connection signal="ledge_grab" from="Ground/Platforms" to="Flamme" method="_on_platforms_ledge_grab"]
 [connection signal="ledge_grab" from="Ground/Platforms" to="Flamme2" method="_on_platforms_ledge_grab"]
 [connection signal="attack_connect" from="Flamme" to="Flamme2" method="_on_flamme_attack_connect"]
-[connection signal="attack_connect" from="Flamme2" to="Flamme" method="_on_flamme_2_attack_connect"]
 
 [editable path="Ground"]

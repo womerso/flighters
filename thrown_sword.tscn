@@ -39,14 +39,15 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_85601")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
-size = Vector3(1, 0.85650635, 0.45507813)
+size = Vector3(1, 0.85650635, 1.0112305)
 
 [node name="RigidBody3D" type="Area3D" unique_id=489117702]
+collision_layer = 4
 
 [node name="Sword2" type="MeshInstance3D" parent="." unique_id=1257548223]
 transform = Transform3D(0.6149108, -0.07494324, 0.03476207, 0.012419015, -0.17424421, -0.59533536, 0.081674084, 0.5907298, -0.17119265, 0, 0, 0)
 mesh = SubResource("ArrayMesh_oouv5")
 
 [node name="sword_box" type="CollisionShape3D" parent="." unique_id=1858472158]
-transform = Transform3D(1, 0, 0, 0, 0.9275222, -0.37376806, 0, 0.37376806, 0.9275222, 0, 0.35897824, 0.07837695)
+transform = Transform3D(1, 0, 0, 0, 0.9275222, -0.37376806, 0, 0.37376806, 0.9275222, 0, 0.32421124, 0.16465282)
 shape = SubResource("BoxShape3D_nh15l")
