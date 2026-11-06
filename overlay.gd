@@ -22,7 +22,7 @@ func _process(delta: float) -> void:
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
-
+	print("tets")
 	plane_entered.emit(body, cam.position)
 
 

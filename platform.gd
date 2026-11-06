@@ -8,8 +8,8 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	
+func _physics_process(delta: float) -> void:
+
 	pass
 
 func _on_ledge_grab_left_body_exited(body: Node3D) -> void:

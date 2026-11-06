@@ -5,9 +5,7 @@ signal ledge_grab
 func _ready() -> void:
 	
 	for child in get_children():
-		print(child.name)
 		child.ledge_grab.connect(_on_grab)
-	print(get_incoming_connections())
 	pass # Replace with function body.
 
 
