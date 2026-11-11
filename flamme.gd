@@ -63,6 +63,7 @@ var total_damage = 0
 @export var thrown_sword_scene: PackedScene
 @onready var held_sword = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"
 @onready var sword_hitbox = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box/sword_box"
+@onready var skin: MeshInstance3D = $"male_body/Skinned Mesh 0/Skeleton3D/Mesh_0_001"
 func _ready():
 	set_collision_layer_value(2, false)
 	set_collision_layer_value(player_id +8, true)
@@ -70,7 +71,18 @@ func _ready():
 	print(String.num_uint64(collision_layer, 2))
 	set_collision_mask_value(9, false)  
 	set_collision_mask_value(10, false)
-
+	var new_texture = load("res://Models/textures/male_skin_%d.png" %( player_id ))
+	var current_mat = skin.get_active_material(0)
+	
+	if current_mat:
+		var unique_mat = current_mat.duplicate() as StandardMaterial3D
+		# Note: If your material is an ORMMaterial3D, cast to that instead
+		
+		# 3. Apply the texture to the albedo and set it as an override
+		unique_mat.albedo_texture = new_texture
+		skin.material_override = unique_mat
+		print("Skin set")
+	print("Skin set")
 func get_anim_state():
 	return anim_tree.get("parameters/playback").get_current_node()
 
