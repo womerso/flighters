@@ -67,8 +67,7 @@ var total_damage = 0
 func _ready():
 	set_collision_layer_value(2, false)
 	set_collision_layer_value(player_id +8, true)
-	print(player_id +8)
-	print(String.num_uint64(collision_layer, 2))
+
 	set_collision_mask_value(9, false)  
 	set_collision_mask_value(10, false)
 	var new_texture = load("res://Models/textures/male_skin_%d.png" %( player_id ))
@@ -76,13 +75,10 @@ func _ready():
 	
 	if current_mat:
 		var unique_mat = current_mat.duplicate() as StandardMaterial3D
-		# Note: If your material is an ORMMaterial3D, cast to that instead
-		
-		# 3. Apply the texture to the albedo and set it as an override
+
 		unique_mat.albedo_texture = new_texture
 		skin.material_override = unique_mat
-		print("Skin set")
-	print("Skin set")
+
 func get_anim_state():
 	return anim_tree.get("parameters/playback").get_current_node()
 
@@ -157,11 +153,11 @@ func _physics_process(delta: float) -> void:
 		idle = true
 	if Input.is_action_just_pressed("attack_p%d" % player_id) and not in_special and landing_lag < 1: 
 		if  is_on_floor():
-			if input_dir.x != 0:
+			if abs(input_dir.y) < 0.3:
 				anim_tree.get("parameters/playback").start("forward_smash_charge")
 				attack_type = "side_charge"
 				attack_lag = -1
-			elif input_dir.y != 0:
+			elif abs(input_dir.y) >= 0.3:
 				anim_tree.get("parameters/playback").start("up_smash_charge")
 				attack_type = "up_charge"
 				attack_lag = -1
@@ -191,11 +187,8 @@ func _physics_process(delta: float) -> void:
 			smash_charge += 0.03
 		
 	if Input.is_action_just_released("attack_p%d" % player_id):
-		print("uhhh ", attack_type)
 		if attack_type == "side_charge":
 			attacking = true
-			
-			print('hello')
 			anim_tree.get("parameters/playback").start("forward_smash_end")
 			attack_lag = 15
 		if attack_type == "up_charge":
@@ -207,15 +200,16 @@ func _physics_process(delta: float) -> void:
 		in_special = true
 		special_lag = 60
 		
-		if input_dir.y < 0:
+		if input_dir.y < -0.2:
+			print("upb")
 			attacking=true
 			special_lag = 100
 			special_type = "UP"
-			#velocity.y = JUMP_VELOCITY * 1.5
 			anim_tree.get("parameters/playback").start("UPB")
 			attack_type = "up_b"
 			up_b = true
 		elif input_dir.x != 0:
+			print("sidb")
 			special_lag = -1
 			special_type = "SIDE"
 			special_dir = sign(input_dir.x)
@@ -242,7 +236,6 @@ func _physics_process(delta: float) -> void:
 			attacking= false
 			in_special = false
 			neutral_attack.scale = Vector3(1,1,1)
-			print("end attack")
 			anim_tree.set("parameters/conditions/end_neutral", true)
 			for child in neutral_attack.get_children():
 				if child is CollisionShape3D:
@@ -257,14 +250,10 @@ func _physics_process(delta: float) -> void:
 		side_charge +=0.01
 		
 	if Input.is_action_just_released("special_p%d" % player_id) and in_special and special_type=="SIDE":
-		print(side_charge)
 		side_charge = max(1.0, side_charge)
-		print("Use Side " , side_charge)
 		velocity.x = side_charge * 100 * special_dir
-		print(velocity.x)
 		attacking = true
 		special_lag = 30
-		print(special_lag)
 		side_kb = side_charge
 		side_charge = 0
 
@@ -285,7 +274,6 @@ func _physics_process(delta: float) -> void:
 		velocity.x = lerp(velocity.x, 0.0, delta * 5.0)
 	
 	if in_special and up_b and maintain_air:
-		print("truth nukl")
 		velocity.y = -0.1
 	move_and_slide()
 	
@@ -294,7 +282,6 @@ func _physics_process(delta: float) -> void:
 		up_b_vy = 0.0  
 	was_on_floor = is_on_floor()
 	if landing_lag > 0:
-		print(landing_lag, special_lag)
 		landing_lag-=1
 	if iframes > 0:
 		iframes-=1
@@ -339,11 +326,10 @@ func _physics_process(delta: float) -> void:
 			midcheck = true
 		attack_lag-=1
 
-	elif attacking and not ( in_special and special_type == "SIDE") :
-		print(attack_type)
+	elif attacking and not ( in_special and (special_type == "SIDE" or special_type=="UP")) :
+
 		attacking = false
 		attack_type = ""
-		print("clear")
 		midcheck=false
 		anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
 	if combo_window > 0:
@@ -393,15 +379,15 @@ func _physics_process(delta: float) -> void:
 
 func land():
 	landing_lag = 15
+	attack_type = ""
 
 func on_hit( y_rot, base_damage, kb_mult, at):
 			iframes = 60
 			
-			print(at)
+			print(kb_mult, " ", at)
 			total_damage+=base_damage * d_scale
 			pivot.rotation_degrees.y = y_rot * -1
-			print(total_damage)
-			print(at)
+
 			if at == "up_b":
 				knockback = Vector3(0.0, 15.0,0.0)
 			if at == "side_b":

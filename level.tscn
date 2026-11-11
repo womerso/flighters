@@ -1,7 +1,5 @@
 [gd_scene format=3 uid="uid://b4acg2ut3fwwg"]
 
-[ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="1_u52ul"]
-[ext_resource type="Script" uid="uid://4pcl3m17lqaq" path="res://platforms.gd" id="2_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://xgx2ndsnmgkv" path="res://flamme.tscn" id="4_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://tkaf3iuing11" path="res://overlay.tscn" id="4_f2txt"]
 [ext_resource type="PackedScene" uid="uid://ct06f4mwukow0" path="res://omega.tscn" id="5_f2txt"]
@@ -11,17 +9,6 @@
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1257816693]
 transform = Transform3D(0.73046833, 0, 0.6829466, -0.36583668, 0.84442496, 0.39129275, -0.57669723, -0.53567386, 0.61682564, 3.4556665, 7.1627774, 2.2554402)
 shadow_enabled = true
-
-[node name="Ground" parent="." unique_id=1548052312 instance=ExtResource("1_u52ul")]
-process_mode = 4
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0.0724349, 0.68544316, 0.37860394)
-visible = false
-
-[node name="Platforms" parent="Ground" index="2" unique_id=670145773]
-script = ExtResource("2_0b4ue")
-
-[node name="Solid2" parent="Ground/Solid Ground" parent_id_path=PackedInt32Array(1548052312, 766703551) index="1" unique_id=1306702211]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 13.478107, 30.702415, 0)
 
 [node name="overlay" parent="." unique_id=1228735558 node_paths=PackedStringArray("p1", "p2") instance=ExtResource("4_f2txt")]
 p1 = NodePath("../Flamme")
@@ -41,10 +28,7 @@ player_id = 2
 
 [node name="Boundary_OMEGA" parent="." unique_id=879918400 instance=ExtResource("5_f2txt")]
 
-[connection signal="ledge_grab" from="Ground/Platforms" to="Flamme" method="_on_platforms_ledge_grab"]
-[connection signal="ledge_grab" from="Ground/Platforms" to="Flamme2" method="_on_platforms_ledge_grab"]
 [connection signal="plane_entered" from="overlay" to="Flamme" method="_on_overlay_plane_entered"]
 [connection signal="plane_entered" from="overlay" to="Flamme2" method="_on_overlay_plane_entered"]
 [connection signal="attack_connect" from="Flamme" to="Flamme2" method="_on_flamme_attack_connect"]
-
-[editable path="Ground"]
+[connection signal="attack_connect" from="Flamme2" to="Flamme" method="_on_flamme_2_attack_connect"]
