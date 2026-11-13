@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://bx8q2jftkp785"]
 
 [ext_resource type="PackedScene" uid="uid://cxudiews1416i" path="res://platform.tscn" id="1_6wonf"]
-[ext_resource type="PackedScene" uid="uid://02p5lydf0bam" path="res://ground_solid.tscn" id="2_rd0yq"]
+[ext_resource type="Script" uid="uid://4pcl3m17lqaq" path="res://platforms.gd" id="1_k4ho8"]
+[ext_resource type="PackedScene" uid="uid://dw5epvtsgu2jd" path="res://branch.tscn" id="3_k4ho8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eyggb"]
 albedo_color = Color(0.2890193, 0.12731099, 0, 1)
@@ -23,51 +24,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.27056885, -3.9722657, 0)
 shape = SubResource("BoxShape3D_nh15l")
 
 [node name="Platforms" type="Node3D" parent="." unique_id=670145773]
+script = ExtResource("1_k4ho8")
 
-[node name="Platform2" parent="Platforms" unique_id=1600672076 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.041038, 4.788811, 0)
-collision_layer = 4
+[node name="Branch3" parent="Platforms" unique_id=2062791181 instance=ExtResource("3_k4ho8")]
+transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -18, 16, 0)
 
-[node name="Platform6" parent="Platforms" unique_id=1021640525 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.663443, 39.540955, 0)
-collision_layer = 4
+[node name="Branch4" parent="Platforms" unique_id=1061053305 instance=ExtResource("3_k4ho8")]
+transform = Transform3D(-1.3113416e-07, 0, -3, 0, 3, 0, 3, 0, -1.3113416e-07, 18, 16, 0)
 
-[node name="Platform7" parent="Platforms" unique_id=2001166559 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.663443, 32.455772, 0)
-collision_layer = 4
+[node name="Platform" parent="Platforms" unique_id=1021640525 instance=ExtResource("1_6wonf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.857196, 0)
 
-[node name="Platform8" parent="Platforms" unique_id=1226313074 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.7332225, 44.09655, 0)
-collision_layer = 4
+[node name="Platform2" parent="Platforms" unique_id=1660833460 instance=ExtResource("1_6wonf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.933, 5, 0)
 
-[node name="Platform3" parent="Platforms" unique_id=1322234921 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.041038, 11.27994, 0)
-collision_layer = 4
-
-[node name="Platform4" parent="Platforms" unique_id=801342 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.641372, 11.27994, 0)
-collision_layer = 4
-
-[node name="Platform5" parent="Platforms" unique_id=583929116 instance=ExtResource("1_6wonf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.237684, 16.39541, 0)
-collision_layer = 4
+[node name="Platform3" parent="Platforms" unique_id=631030529 instance=ExtResource("1_6wonf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.04, 5, 0)
 
 [node name="Solid Ground" type="Node3D" parent="." unique_id=766703551]
-
-[node name="Solid" parent="Solid Ground" unique_id=1691993800 instance=ExtResource("2_rd0yq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.296799, 5.326722, 0)
-
-[node name="Solid2" parent="Solid Ground" unique_id=1306702211 instance=ExtResource("2_rd0yq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.478109, 20.921886, 0)
-
-[node name="Solid3" parent="Solid Ground" unique_id=1541985644 instance=ExtResource("2_rd0yq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3745136, 20.921886, 0)
-
-[node name="Solid5" parent="Solid Ground" unique_id=1953081491 instance=ExtResource("2_rd0yq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.443789, 31.69109, 0)
-
-[node name="Solid6" parent="Solid Ground" unique_id=412617142 instance=ExtResource("2_rd0yq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.566479, 27.19265, 0)
-
-[node name="Solid4" parent="Solid Ground" unique_id=194919591 instance=ExtResource("2_rd0yq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.878794, 20.921886, 0)
