@@ -2,7 +2,8 @@ extends CharacterBody3D
 @export var player_id: int
 @export var pivot: Node3D
 @export var hitbox: CollisionShape3D
-@export var anim_tree: AnimationTree
+#@export var anim_tree: AnimationTree
+@export var animations: AnimationPlayer
 @export var platforms: Node3D
 @onready var hit_part: Node3D = $_impact
 @onready var jump_part: Node3D = $d_jump
@@ -80,7 +81,7 @@ func _ready():
 		skin.material_override = unique_mat
 
 func get_anim_state():
-	return anim_tree.get("parameters/playback").get_current_node()
+	return #anim_tree.get("parameters/playback").get_current_node()
 
 func _physics_process(delta: float) -> void:
 	# Handle jump.
@@ -93,14 +94,19 @@ func _physics_process(delta: float) -> void:
 		jump = false
 		double_jump = false
 
-	if Input.is_action_just_pressed("jump_p%d" % player_id) and jump_count < MAX_JUMP:
+	if Input.is_action_just_pressed("jump_p%d" % player_id) and jump_count < MAX_JUMP and "charge" not in attack_type:
 		jump = true
 		is_hanging=false
 		jump_count+=1
+		print("Play Animation")
+		animations.play("Jump_Start")
+		print(animations.current_animation)
 		if jump_count == MAX_JUMP:
-			anim_tree.set("parameters/BackFlip/TimeSeek/seek_request", 0.6)
 			double_jump = true
-			velocity.y = JUMP_VELOCITY * .75 # Shortened Double Jump
+			
+			animations.play("Backflip")
+			animations.seek(0.6, true)
+			velocity.y = JUMP_VELOCITY * .85 # Shortened Double Jump
 			for child in jump_part.get_children():
 				print(child)
 				child.restart()
@@ -111,15 +117,16 @@ func _physics_process(delta: float) -> void:
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("left_p%d" % player_id, "right_p%d" % player_id, "up_p%d" % player_id, "down_p%d" % player_id)
 	var direction := (transform.basis * Vector3(input_dir.x, 0, 0)).normalized()
-	#print(input_dir)
 	if direction  and abs(input_dir.x) > 0.2 and landing_lag <1 and not (in_special and (special_type=="SIDE" or special_type=="UP" or special_type == "N")) and not attack_type == "side_charge":
 		
 		var move_dir := transform.basis.x * input_dir.x
-		
+		print(input_dir.y)
 		if input_dir.y > .5:
 			idle = false
 			velocity.x = move_dir.x * SPEED * .5
 			crouched = true
+			print("Crouch Walk")
+			animations.play("Crouch_Walk")
 		else:
 			idle = false
 			if is_hanging and sign(move_dir.x) == hanging_dir:
@@ -127,6 +134,8 @@ func _physics_process(delta: float) -> void:
 				print(hang_pos)
 				position.y = hang_pos + hitbox.shape.height - HEIGHT_OFFSET - 0.15
 				print(position.y)
+			if (is_on_floor()):
+				animations.play("Sprint")
 			velocity.x = move_dir.x * SPEED
 
 		
@@ -141,43 +150,56 @@ func _physics_process(delta: float) -> void:
 		else:
 			pivot.rotation.y = 3*PI/2 if input_dir.x < 0 else PI/2
 		
-	elif direction and not attacking and abs(input_dir.x) < .2 and input_dir.y > .5:
+	elif input_dir and not attacking and abs(input_dir.x) < .2 and input_dir.y > .5:
+		print(input_dir)
 		crouched =true
+		animations.play("Crouch_Idle")
 	else:
 		crouched= false
 		if not (in_special and special_type == "SIDE"):
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 	if input_dir.y > 0 and not is_on_floor():
 			velocity +=  GRAVITY * delta
-	if velocity.x == 0 and not attacking:
+	if velocity.x == 0 and not attacking and "charge" not in attack_type:
 		idle = true
 	if Input.is_action_just_pressed("attack_p%d" % player_id) and not in_special and landing_lag < 1: 
+		idle = false
 		if  is_on_floor():
-			if abs(input_dir.y) < 0.3:
-				anim_tree.get("parameters/playback").start("forward_smash_charge")
+			if abs(input_dir.x) != 0.0:
+				animations.play("forward_smash_charge")
 				attack_type = "side_charge"
 				attack_lag = -1
 			elif abs(input_dir.y) >= 0.3:
-				anim_tree.get("parameters/playback").start("up_smash_charge")
+				animations.play("up_smash_charge")
 				attack_type = "up_charge"
 				attack_lag = -1
 			else:
 				print("attack")
+				var c: String = "A"
 				if combo_window > 0:
-					anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
+					
+					if attack_count == 1:
+						c = "A"
+					elif attack_count == 2:
+						c = "B"
+					else:
+						c = "C"
+					
 					
 					if attack_count > 2:
 						attack_count = 1
 					else:
 						attack_count+=1
-				
-				anim_tree.set("parameters/conditions/attack_%d" % attack_count, true)
+				else:
+					attack_count = 1
+				animations.play("Sword_Regular_%s" % c)
 				attacking = true
 				attack_type = "neutral_%d" % attack_count
 				attack_lag = 15
-				combo_window = 45
+				combo_window = 50
+				
 		else:
-			anim_tree.get("parameters/playback").start("air_neutral")
+			animations.play("air_neutral")
 			attacking = true
 			attack_lag = 15
 			combo_window = 45
@@ -189,23 +211,23 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("attack_p%d" % player_id):
 		if attack_type == "side_charge":
 			attacking = true
-			anim_tree.get("parameters/playback").start("forward_smash_end")
+			animations.play("forward_smash_end")
 			attack_lag = 15
 		if attack_type == "up_charge":
 			attacking = true
-			anim_tree.get("parameters/playback").start("up_smash_end")
+			animations.play("up_smash_end")
 			attack_lag = 15
 				
 	if Input.is_action_just_pressed("special_p%d" % player_id) and not in_special and landing_lag < 1:
 		in_special = true
 		special_lag = 60
-		
+		idle = false
 		if input_dir.y < -0.2:
 			print("upb")
 			attacking=true
 			special_lag = 100
 			special_type = "UP"
-			anim_tree.get("parameters/playback").start("UPB")
+			animations.play("Throw_Up")
 			attack_type = "up_b"
 			up_b = true
 		elif input_dir.x != 0:
@@ -213,14 +235,14 @@ func _physics_process(delta: float) -> void:
 			special_lag = -1
 			special_type = "SIDE"
 			special_dir = sign(input_dir.x)
-			anim_tree.get("parameters/playback").start("side_b_enter")
+			animations.play("side_b_enter")
 			attack_type = "side_b"
 		else:
 			attacking= true
 			special_type = "N"
 			in_special=true
-			anim_tree.get("parameters/playback").start("Spell_Simple_Enter")
-			anim_tree.set("parameters/conditions/end_neutral", false) 
+			animations.play("Spell_Simple_Enter")
+			#anim_tree.set("parameters/conditions/end_neutral", false) 
 			attack_type = "neutral_b"
 			for child in neutral_attack.get_children():
 				if child is CollisionShape3D:
@@ -236,7 +258,7 @@ func _physics_process(delta: float) -> void:
 			attacking= false
 			in_special = false
 			neutral_attack.scale = Vector3(1,1,1)
-			anim_tree.set("parameters/conditions/end_neutral", true)
+			animations.play("Spell_Simple_Exit")
 			for child in neutral_attack.get_children():
 				if child is CollisionShape3D:
 					
@@ -244,7 +266,8 @@ func _physics_process(delta: float) -> void:
 				if child is GPUParticles3D:
 					child.emitting = false
 		elif special_type == "SIDE":
-			anim_tree.get("parameters/playback").start("side_b_leave")
+			animations.play("side_b_leave")
+			pass
 	if Input.is_action_pressed("special_p%d" % player_id) and in_special and special_type=="SIDE":
 		velocity.x = 0
 		side_charge +=0.01
@@ -331,12 +354,10 @@ func _physics_process(delta: float) -> void:
 		attacking = false
 		attack_type = ""
 		midcheck=false
-		anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
 	if combo_window > 0:
 		combo_window-=1
 		attacking = true
 	elif combo_window == 0:
-		anim_tree.set("parameters/conditions/attack_%d" % attack_count, false)
 		attack_count = 1
 		combo_window = -1
 	if in_special:
@@ -365,21 +386,27 @@ func _physics_process(delta: float) -> void:
 		sword_hitbox.disabled = false
 	if stun > 0:
 		stun -=1
-	anim_tree.set("parameters/conditions/is_idle", idle and not crouched and not is_hanging)
-	anim_tree.set("parameters/conditions/is_moving", not idle and not crouched)
-	anim_tree.set("parameters/conditions/is_crouched", crouched and idle)
-	anim_tree.set("parameters/conditions/crouch_move", crouched and not idle)
-	anim_tree.set("parameters/conditions/double_jump", double_jump)
-	anim_tree.set("parameters/conditions/up_b", up_b)
-	anim_tree.set("parameters/conditions/is_jump", jump)
-	anim_tree.set("parameters/conditions/in_air", not is_on_floor() and not stun > 0 and not is_hanging)
 	
-	anim_tree.set("parameters/conditions/landed", not jump and is_on_floor())
-	anim_tree.set("parameters/conditions/hang", is_hanging)
+	print(crouched)
+	if not(not is_on_floor() and not stun > 0 and not is_hanging) and (animations.current_animation == "Jump_air" or animations.current_animation == "Jump_Start" or animations.current_animation == "Backflip"):
+		print("changing")
+		
+		_on_animation_player_animation_finished("Jump_air")
+	elif (not is_on_floor() and not stun > 0 and not is_hanging and not attacking ) and (animations.current_animation != "Jump_Start" and animations.current_animation != "Backflip" and animations.current_animation != "Throw_Up"):
+		animations.play("Jump_air")
+	elif is_on_floor() and animations.current_animation != "Jump_Land" and animations.current_animation != "Spell_Simple_Exit" and animations.current_animation != "Spell_Simple_Enter" and animations.current_animation != "Spell_Simple_Idle" and "smash" not in animations.current_animation:
+		if not idle and not crouched and not attacking and not in_special and attack_type == "":
+			animations.play("Sprint")
+		elif idle and not crouched and not is_hanging and not attacking and not in_special:
+			print("RIP")
+			animations.play("Idle_A")
+
 
 func land():
+	print("land")
 	landing_lag = 15
 	attack_type = ""
+	animations.play("Jump_Land")
 
 func on_hit( y_rot, base_damage, kb_mult, at):
 			iframes = 60
@@ -410,9 +437,11 @@ func on_hit( y_rot, base_damage, kb_mult, at):
 			#knockback = (total_damage / 50.0 )*Vector3(sign(cos(deg_to_rad(y_rot))) * base_knockback,1.0, 0.0)
 			print(knockback)
 			if (abs(knockback.x) > 1.0):
-				anim_tree.get("parameters/playback").start("Hit_Knockback")
+				animations.play("Hit_Knockback")
+				pass
 			else:
-				anim_tree.get("parameters/playback").start("Hit_Chest")
+				animations.play("Hit_Chest")
+				pass
 			for child in hit_part.get_children():
 				print(child)
 				child.restart()
@@ -510,4 +539,19 @@ func rejoin_sword(body: Node3D) -> void:
 		maintain_air = true
 	proj_sword.queue_free()
 	proj_sword = null
+	pass # Replace with function body.
+
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	
+	if anim_name == "Jump_Start":
+		animations.play("Jump_air")
+	elif anim_name == "Jump_air":
+		animations.play("Jump_Land")
+	elif anim_name == "Jump_Land":
+		animations.play("Idle_A")
+	elif anim_name == "Spell_Simple_Enter":
+		animations.play("Spell_Simple_Idle")
+	elif anim_name == "Spell_Simple_Exit":
+		animations.play("Idle_A")
 	pass # Replace with function body.
