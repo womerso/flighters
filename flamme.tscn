@@ -4,7 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://cst5j4t6v0ldo" path="res://male_body.glb" id="2_qnre3"]
 [ext_resource type="PackedScene" uid="uid://cjgk0uuda7en2" path="res://thrown_sword.tscn" id="3_rk06u"]
 [ext_resource type="PackedScene" uid="uid://dus8i43ic345n" path="res://_impact.tscn" id="4_0yf33"]
+[ext_resource type="PackedScene" uid="uid://cqg1ok3o02jow" path="res://fire_slash.tscn" id="4_rk06u"]
 [ext_resource type="PackedScene" uid="uid://bxiqbh73q21uo" path="res://d_jump.tscn" id="5_uhbh6"]
+[ext_resource type="PackedScene" uid="uid://c27ej1mjoav0p" path="res://fire_cone.tscn" id="6_qnre3"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_iowp4"]
 velocity_pivot = Vector3(0, 0, -1)
@@ -454,7 +456,9 @@ script = ExtResource("1_iowp4")
 pivot = NodePath("male_body")
 hitbox = NodePath("hitBox")
 animations = NodePath("male_body/AnimationPlayer")
+flame_effect = ExtResource("6_qnre3")
 thrown_sword_scene = ExtResource("3_rk06u")
+fire_slash = ExtResource("4_rk06u")
 
 [node name="male_body" parent="." unique_id=35373313 instance=ExtResource("2_qnre3")]
 
@@ -540,7 +544,7 @@ bone_name = "lowerarm_r.001"
 bone_idx = 53
 
 [node name="sword_box" parent="male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D" unique_id=1257548223 instance=ExtResource("3_rk06u")]
-transform = Transform3D(-0.68276554, 0.6223558, -0.3827603, -0.5656926, -0.11873268, 0.8160233, 0.46241093, 0.77367723, 0.43312848, -0.028811276, 0.11072424, 0.016092002)
+transform = Transform3D(-1.0241479, 0.9335334, -0.57413983, -0.8485385, -0.17809899, 1.2240355, 0.6936162, 1.1605155, 0.6496925, -0.028811276, 0.11072424, 0.016092002)
 collision_layer = 3845
 collision_mask = 3847
 

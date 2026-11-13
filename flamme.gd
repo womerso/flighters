@@ -25,6 +25,7 @@ var proj_sword: Area3D = null
 var knockback: Vector3
 var stun = 0
 var up_b_vy = 0.0
+var slash_effect
 var jump_count = 0
 var attacking = false
 var attack_count = 1
@@ -61,10 +62,14 @@ var d_scale = 1.0
 var maintain_air = false
 var smash_charge = 1.0
 var total_damage = 0
+var flame_floor
+var flame_scale = 0.0;
+@export var flame_effect: PackedScene
 @export var thrown_sword_scene: PackedScene
 @onready var held_sword = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"
 @onready var sword_hitbox = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box/sword_box"
 @onready var skin: MeshInstance3D = $"male_body/Skinned Mesh 0/Skeleton3D/Mesh_0_001"
+@export var fire_slash: PackedScene
 func _ready():
 	set_collision_layer_value(2, false)
 	set_collision_layer_value(player_id +8, true)
@@ -193,6 +198,8 @@ func _physics_process(delta: float) -> void:
 				else:
 					attack_count = 1
 				animations.play("Sword_Regular_%s" % c)
+				slash_effect = fire_slash.instantiate()
+				sword_hitbox.add_child(slash_effect)
 				attacking = true
 				attack_type = "neutral_%d" % attack_count
 				attack_lag = 15
@@ -228,6 +235,10 @@ func _physics_process(delta: float) -> void:
 			special_lag = 100
 			special_type = "UP"
 			animations.play("Throw_Up")
+			flame_floor = flame_effect.instantiate()
+			pivot.add_child(flame_floor)
+			flame_scale = 0.0
+			flame_floor.get_child(0).get_active_material(0).set_shader_parameter("time", delta)
 			attack_type = "up_b"
 			up_b = true
 		elif input_dir.x != 0:
@@ -299,7 +310,9 @@ func _physics_process(delta: float) -> void:
 	if in_special and up_b and maintain_air:
 		velocity.y = -0.1
 	move_and_slide()
-	
+	if flame_floor:
+		flame_scale += delta
+		flame_floor.get_child(0).get_active_material(0).set_shader_parameter("time", flame_scale)
 	if up_b_vy > 0.0 and is_on_ceiling():
 		velocity.y = up_b_vy
 		up_b_vy = 0.0  
@@ -387,7 +400,6 @@ func _physics_process(delta: float) -> void:
 	if stun > 0:
 		stun -=1
 	
-	print(crouched)
 	if not(not is_on_floor() and not stun > 0 and not is_hanging) and (animations.current_animation == "Jump_air" or animations.current_animation == "Jump_Start" or animations.current_animation == "Backflip"):
 		print("changing")
 		
@@ -398,10 +410,12 @@ func _physics_process(delta: float) -> void:
 		if not idle and not crouched and not attacking and not in_special and attack_type == "":
 			animations.play("Sprint")
 		elif idle and not crouched and not is_hanging and not attacking and not in_special:
-			print("RIP")
+			
 			animations.play("Idle_A")
 
-
+	if "Sword_Regular" not in animations.current_animation and sword_hitbox.get_child_count() > 0:
+		for child in sword_hitbox.get_children():
+			sword_hitbox.remove_child(child)
 func land():
 	print("land")
 	landing_lag = 15
@@ -523,6 +537,7 @@ func begin_jump():
 	print("Jump")
 	print(special_lag)
 	is_jumping_b = true
+	pivot.remove_child(flame_floor)
 
 
 
@@ -554,4 +569,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 		animations.play("Spell_Simple_Idle")
 	elif anim_name == "Spell_Simple_Exit":
 		animations.play("Idle_A")
+	elif "Sword_Regular" in anim_name:
+		for child in sword_hitbox.get_children():
+			sword_hitbox.remove_child(child)
 	pass # Replace with function body.

@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://c27ej1mjoav0p"]
+
+[ext_resource type="PackedScene" uid="uid://d0rw6nsg6yiuy" path="res://Models/fire_cone.blend" id="1_mo16n"]
+[ext_resource type="Script" uid="uid://e76hivs3f08e" path="res://fire_cone.gd" id="2_viiyx"]
+[ext_resource type="Shader" uid="uid://6qgu20pmprdy" path="res://flame_cyl.gdshader" id="3_sd2ot"]
+[ext_resource type="Texture2D" uid="uid://b2a8166hpptpa" path="res://Textures/T_AuraC12.jpg" id="4_viiyx"]
+
+[sub_resource type="Gradient" id="Gradient_viiyx"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_viiyx"]
+gradient = SubResource("Gradient_viiyx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sd2ot"]
+render_priority = 0
+shader = ExtResource("3_sd2ot")
+shader_parameter/fire_tex = ExtResource("4_viiyx")
+shader_parameter/color_gradient = SubResource("GradientTexture1D_viiyx")
+shader_parameter/time = 0.0
+
+[node name="fire_cone" unique_id=1162152034 instance=ExtResource("1_mo16n")]
+script = ExtResource("2_viiyx")
+
+[node name="Cylinder" parent="." index="0" unique_id=1463627031]
+surface_material_override/0 = SubResource("ShaderMaterial_sd2ot")

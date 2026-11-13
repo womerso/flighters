@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dnpobrevrjuls"]
+
+[node name="Node3D" type="Node3D" unique_id=102497886]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=737332452]
