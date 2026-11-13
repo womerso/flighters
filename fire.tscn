@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://v7yypyovj0cb"]
+
+[ext_resource type="Texture2D" uid="uid://cleopx8whi1wm" path="res://Textures/fire_texture.png" id="1_2pqqt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4r3aq"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+albedo_texture = ExtResource("1_2pqqt")
+albedo_texture_force_srgb = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_evexo"]
+_data = [Vector2(0.37575758, 1), 0.0, 0.0, 0, 0, Vector2(0.99999994, 0.03125), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_o3w2l"]
+curve = SubResource("Curve_evexo")
+
+[sub_resource type="Gradient" id="Gradient_5ltu8"]
+offsets = PackedFloat32Array(0, 0.23684211, 0.5197368)
+colors = PackedColorArray(1, 1, 1, 1, 0.79, 0.37762, 0.36339998, 1, 0.46229059, 0.46229059, 0.46229059, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bp0fa"]
+gradient = SubResource("Gradient_5ltu8")
+
+[sub_resource type="Curve" id="Curve_x6ecg"]
+_data = [Vector2(0, 0.49999994), 0.0, 0.0, 0, 0, Vector2(0.36666667, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_xbh0h"]
+curve = SubResource("Curve_x6ecg")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nh15l"]
+lifetime_randomness = 0.54
+particle_flag_rotate_y = true
+emission_shape = 1
+emission_sphere_radius = 0.2
+angle_min = -179.99998
+angle_max = 180.00002
+direction = Vector3(0, 0.001, 0)
+spread = 0.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = 0.49997765
+gravity = Vector3(0, 0, 0)
+scale_min = 0.9
+scale_max = 1.4
+scale_curve = SubResource("CurveTexture_xbh0h")
+color = Color(1.224127, 0.9563794, 0.5815325, 1)
+color_ramp = SubResource("GradientTexture1D_bp0fa")
+alpha_curve = SubResource("CurveTexture_o3w2l")
+
+[sub_resource type="QuadMesh" id="QuadMesh_xbh0h"]
+
+[node name="StaticFlame" type="GPUParticles3D" unique_id=691018818]
+material_override = SubResource("StandardMaterial3D_4r3aq")
+amount = 50
+lifetime = 0.4
+process_material = SubResource("ParticleProcessMaterial_nh15l")
+draw_pass_1 = SubResource("QuadMesh_xbh0h")

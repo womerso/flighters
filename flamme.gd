@@ -9,11 +9,11 @@ extends CharacterBody3D
 @onready var jump_part: Node3D = $d_jump
 @onready var neutral_attack: Area3D = $"male_body/Skinned Mesh 0/Neutral"
 
-const SPEED = 10.0
-const JUMP_VELOCITY = 18 #Was 12
+const SPEED = 10.08
+const JUMP_VELOCITY = 18#Was 12
 const W_ATTACK_VEL = 23
 const ATTACK_LAG = 20
-const GRAVITY = Vector3(0,-25,0)
+const GRAVITY = Vector3(0,-27,0)
 const MAX_JUMP = 2
 const HEIGHT_OFFSET = 0.2
 const ROT_SPEED = 2000
@@ -61,11 +61,15 @@ var d_scale = 1.0
 var maintain_air = false
 var smash_charge = 1.0
 var total_damage = 0
+var blink_shader = null
 @export var thrown_sword_scene: PackedScene
 @onready var held_sword = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"
 @onready var sword_hitbox = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box/sword_box"
 @onready var skin: MeshInstance3D = $"male_body/Skinned Mesh 0/Skeleton3D/Mesh_0_001"
+@onready var flame_particle: GPUParticles3D = $male_body/FireParticles
+var prev_input_x = []
 func _ready():
+	axis_lock_linear_z = true
 	set_collision_layer_value(2, false)
 	set_collision_layer_value(player_id +8, true)
 
@@ -79,6 +83,11 @@ func _ready():
 
 		unique_mat.albedo_texture = new_texture
 		skin.material_override = unique_mat
+		
+		var shader = load("res://charge.gdshader")
+		blink_shader = ShaderMaterial.new()
+		blink_shader.shader = shader
+
 
 func get_anim_state():
 	return #anim_tree.get("parameters/playback").get_current_node()
@@ -112,91 +121,60 @@ func _physics_process(delta: float) -> void:
 				child.restart()
 		else:
 			velocity.y = JUMP_VELOCITY
-
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("left_p%d" % player_id, "right_p%d" % player_id, "up_p%d" % player_id, "down_p%d" % player_id)
 	var direction := (transform.basis * Vector3(input_dir.x, 0, 0)).normalized()
-	if direction  and abs(input_dir.x) > 0.2 and landing_lag <1 and not (in_special and (special_type=="SIDE" or special_type=="UP" or special_type == "N")) and not attack_type == "side_charge":
-		
-		var move_dir := transform.basis.x * input_dir.x
-		print(input_dir.y)
-		if input_dir.y > .5:
-			idle = false
-			velocity.x = move_dir.x * SPEED * .5
-			crouched = true
-			print("Crouch Walk")
-			animations.play("Crouch_Walk")
-		else:
-			idle = false
-			if is_hanging and sign(move_dir.x) == hanging_dir:
-				print(hitbox.shape.height)
-				print(hang_pos)
-				position.y = hang_pos + hitbox.shape.height - HEIGHT_OFFSET - 0.15
-				print(position.y)
-			if (is_on_floor()):
-				animations.play("Sprint")
-			velocity.x = move_dir.x * SPEED
-
-		
-			
-			crouched=false
-		
-		if is_hanging:
-			is_hanging = false
-			double_jump=false
-			jump =false
-			pivot.rotation.y = 3*PI/2 if hanging_dir < 0 else PI/2
-		else:
-			pivot.rotation.y = 3*PI/2 if input_dir.x < 0 else PI/2
-		
-	elif input_dir and not attacking and abs(input_dir.x) < .2 and input_dir.y > .5:
-		print(input_dir)
-		crouched =true
-		animations.play("Crouch_Idle")
-	else:
-		crouched= false
-		if not (in_special and special_type == "SIDE"):
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-	if input_dir.y > 0 and not is_on_floor():
-			velocity +=  GRAVITY * delta
-	if velocity.x == 0 and not attacking and "charge" not in attack_type:
-		idle = true
+	prev_input_x.append(input_dir.x)
+	if len(prev_input_x) > 15:
+		prev_input_x.pop_front()
 	if Input.is_action_just_pressed("attack_p%d" % player_id) and not in_special and landing_lag < 1: 
 		idle = false
+		print(prev_input_x)
+		print(velocity.x)
 		if  is_on_floor():
-			if abs(input_dir.x) != 0.0:
-				animations.play("forward_smash_charge")
-				attack_type = "side_charge"
-				attack_lag = -1
-			elif abs(input_dir.y) >= 0.3:
-				animations.play("up_smash_charge")
-				attack_type = "up_charge"
-				attack_lag = -1
-			else:
-				print("attack")
-				var c: String = "A"
-				if combo_window > 0:
-					
-					if attack_count == 1:
-						c = "A"
-					elif attack_count == 2:
-						c = "B"
-					else:
-						c = "C"
-					
-					
-					if attack_count > 2:
-						attack_count = 1
-					else:
-						attack_count+=1
-				else:
-					attack_count = 1
-				animations.play("Sword_Regular_%s" % c)
+			if velocity.x != 0 and 0.0 not in prev_input_x:
+				animations.play("SprintAttack")
 				attacking = true
-				attack_type = "neutral_%d" % attack_count
-				attack_lag = 15
-				combo_window = 50
+				attack_lag = 30
+				attack_type = "side_tilt"
+			else:
+				print("TRY")
+				if abs(input_dir.x) >= 0.2:
+					print(input_dir.x)
+					skin.material_overlay = blink_shader
+					animations.play("forward_smash_charge",-1, 2.0)
+					attack_type = "side_charge"
+					attack_lag = -1
+				elif abs(input_dir.y) >= 0.3:
+					skin.material_overlay = blink_shader
+					animations.play("up_smash_charge")
+					attack_type = "up_charge"
+					attack_lag = -1
+				else:
+					print("attack")
+					var c: String = "A"
+					if combo_window > 0:
+						
+						if attack_count == 1:
+							c = "A"
+						elif attack_count == 2:
+							c = "B"
+						else:
+							c = "C"
+						
+						
+						if attack_count > 2:
+							attack_count = 1
+						else:
+							attack_count+=1
+					else:
+						attack_count = 1
+					animations.play("Sword_Regular_%s" % c)
+					attacking = true
+					attack_type = "neutral_%d" % attack_count
+					attack_lag = 15
+					combo_window = 50
 				
 		else:
 			animations.play("air_neutral")
@@ -210,10 +188,12 @@ func _physics_process(delta: float) -> void:
 		
 	if Input.is_action_just_released("attack_p%d" % player_id):
 		if attack_type == "side_charge":
+			skin.material_overlay = null
 			attacking = true
 			animations.play("forward_smash_end")
 			attack_lag = 15
 		if attack_type == "up_charge":
+			skin.material_overlay = null
 			attacking = true
 			animations.play("up_smash_end")
 			attack_lag = 15
@@ -254,6 +234,7 @@ func _physics_process(delta: float) -> void:
 		print(Input.is_action_just_released("special_p%d" % player_id))
 	if (Input.is_action_just_released("special_p%d" % player_id) or neutral_stam <= 0.0) and in_special :
 		print("chefck")
+		
 		if special_type == "N":
 			attacking= false
 			in_special = false
@@ -279,7 +260,62 @@ func _physics_process(delta: float) -> void:
 		special_lag = 30
 		side_kb = side_charge
 		side_charge = 0
+	
+	if direction  and abs(input_dir.x) > 0.2 and landing_lag <1 and not (in_special and (special_type=="SIDE" or special_type=="UP" or special_type == "N")) and not attack_type == "side_charge":
+		
+		var move_dir := transform.basis.x * input_dir.x
 
+		if input_dir.y > .5:
+			if is_hanging:
+				print("end hang")
+				is_hanging = false
+			else:
+				idle = false
+				velocity.x = move_dir.x * SPEED * .5
+				crouched = true
+				print("Crouch Walk")
+				animations.play("Crouch_Walk")
+		else:
+			idle = false
+			print(hanging_dir, " ", sign(move_dir.x), " ", is_hanging)
+			if is_hanging and sign(move_dir.x) == sign(hanging_dir):
+				
+				print(hitbox.shape.height)
+				print(hang_pos)
+				position.y = hang_pos + hitbox.shape.height 
+				print(position.y)
+			if (is_on_floor() and not attacking):
+				animations.play("Sprint")
+			velocity.x = move_dir.x * SPEED
+
+		
+			
+			crouched=false
+		
+		if is_hanging:
+			is_hanging = false
+			double_jump=false
+			jump =false
+			pivot.rotation.y = 3*PI/2 if hanging_dir < 0 else PI/2
+		else:
+			pivot.rotation.y = 3*PI/2 if input_dir.x < 0 else PI/2
+		
+	elif input_dir and not attacking and abs(input_dir.x) < .2 and input_dir.y > .5:
+		if is_hanging:
+				print("end hang")
+				is_hanging = false
+		else:
+			print(input_dir)
+			crouched =true
+			animations.play("Crouch_Idle")
+	else:
+		crouched= false
+		if not (in_special and special_type == "SIDE"):
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+	if input_dir.y > 0 and not is_on_floor():
+			velocity +=  GRAVITY * delta
+	if velocity.x == 0 and not attacking and "charge" not in attack_type:
+		idle = true
 	if not is_on_floor() and not is_hanging:
 		velocity +=  GRAVITY * delta
 		if stun > 0:
@@ -298,6 +334,7 @@ func _physics_process(delta: float) -> void:
 	
 	if in_special and up_b and maintain_air:
 		velocity.y = -0.1
+	velocity.z = 0
 	move_and_slide()
 	
 	if up_b_vy > 0.0 and is_on_ceiling():
@@ -387,7 +424,6 @@ func _physics_process(delta: float) -> void:
 	if stun > 0:
 		stun -=1
 	
-	print(crouched)
 	if not(not is_on_floor() and not stun > 0 and not is_hanging) and (animations.current_animation == "Jump_air" or animations.current_animation == "Jump_Start" or animations.current_animation == "Backflip"):
 		print("changing")
 		
@@ -398,15 +434,18 @@ func _physics_process(delta: float) -> void:
 		if not idle and not crouched and not attacking and not in_special and attack_type == "":
 			animations.play("Sprint")
 		elif idle and not crouched and not is_hanging and not attacking and not in_special:
-			print("RIP")
 			animations.play("Idle_A")
 
-
+	if animations.current_animation == "Sprint":
+		flame_particle.emitting = true
+	else:
+		flame_particle.emitting = false
 func land():
 	print("land")
 	landing_lag = 15
 	attack_type = ""
-	animations.play("Jump_Land")
+	if not is_hanging:
+		animations.play("Jump_Land")
 
 func on_hit( y_rot, base_damage, kb_mult, at):
 			iframes = 60
@@ -492,10 +531,6 @@ func _on_flamme_2_attack_connect(target, y_rot, base_damage, base_knockback, at)
 			on_hit(y_rot, base_damage, base_knockback, at)
 	pass # Replace with function body.
 
-
-
-
-
 func _on_neutral_body_entered(body: Node3D) -> void:
 	print("oohjooo")
 	attack_connect.emit(body.name,pivot.rotation_degrees.y, 2, 0.1, attack_type)
@@ -503,12 +538,14 @@ func _on_neutral_body_entered(body: Node3D) -> void:
 
 
 func _on_platforms_ledge_grab(body,gposition, dir) -> void:
-	if body.name == name and position.y + hitbox.shape.get("height") < gposition.y and not up_b:
-		print(gposition.y, "  ", position.y )
+	print(sin(pivot.global_rotation.y), " ", dir)
+	if body.name == name and position.y + hitbox.shape.get("height") < gposition.y and not up_b and sin(pivot.global_rotation.y) == dir:
+		print("Attempt Ledge Grab")
 		hang_pos = gposition.y
 		velocity.y = 0
 		is_hanging = true
-		hanging_dir = dir
+		hanging_dir = dir 
+		animations.play("Ledge_Hang")
 	pass # Replace with function body.
 
 

@@ -2,33 +2,60 @@
 
 [ext_resource type="PackedScene" uid="uid://xgx2ndsnmgkv" path="res://flamme.tscn" id="4_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://tkaf3iuing11" path="res://overlay.tscn" id="4_f2txt"]
-[ext_resource type="PackedScene" uid="uid://ct06f4mwukow0" path="res://omega.tscn" id="5_f2txt"]
+[ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="4_n6hdu"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4r3aq"]
+sky_top_color = Color(5.390644e-06, 0.7456088, 0.92727494, 1)
+sky_horizon_color = Color(0.8092166, 0.877235, 1, 1)
+sky_curve = 0.06759372
+sun_curve = 0.21213196
+
+[sub_resource type="Sky" id="Sky_xbh0h"]
+sky_material = SubResource("ProceduralSkyMaterial_4r3aq")
+
+[sub_resource type="Environment" id="Environment_nh15l"]
+background_mode = 2
+sky = SubResource("Sky_xbh0h")
 
 [node name="Level" type="Node3D" unique_id=1456923665]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1257816693]
-transform = Transform3D(0.73046833, 0, 0.6829466, -0.36583668, 0.84442496, 0.39129275, -0.57669723, -0.53567386, 0.61682564, 3.4556665, 7.1627774, 2.2554402)
+transform = Transform3D(0.7304683, 0, 0.6829466, -0.36583665, 0.84442496, 0.39129275, -0.5766972, -0.53567386, 0.61682564, 3.4556665, 82.6638, 2.2554402)
 shadow_enabled = true
 
 [node name="overlay" parent="." unique_id=1228735558 node_paths=PackedStringArray("p1", "p2") instance=ExtResource("4_f2txt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 75.50102, 0)
 p1 = NodePath("../Flamme")
 p2 = NodePath("../Flamme2")
 
 [node name="Flamme" parent="." unique_id=667861679 instance=ExtResource("4_0b4ue")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.7513778, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 77.2524, 0)
 collision_layer = 2
 collision_mask = 5
 player_id = 1
 
 [node name="Flamme2" parent="." unique_id=851777768 instance=ExtResource("4_0b4ue")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4.3630185, 1.6654942, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4.3630185, 77.16652, 0)
 collision_layer = 2
 collision_mask = 5
 player_id = 2
 
-[node name="Boundary_OMEGA" parent="." unique_id=879918400 instance=ExtResource("5_f2txt")]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=59120679]
+environment = SubResource("Environment_nh15l")
+
+[node name="Boundary" parent="." unique_id=879918400 instance=ExtResource("4_n6hdu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 75.50102, 0)
+
+[node name="Branch3" parent="Boundary/Platforms" parent_id_path=PackedInt32Array(879918400, 670145773) index="0" unique_id=2062791181]
+transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -18, 31.473465, 0)
+
+[node name="Branch4" parent="Boundary/Platforms" parent_id_path=PackedInt32Array(879918400, 670145773) index="1" unique_id=1061053305]
+transform = Transform3D(-1.3113416e-07, 0, -3, 0, 3, 0, 3, 0, -1.3113416e-07, 18, 31.473465, 0)
 
 [connection signal="plane_entered" from="overlay" to="Flamme" method="_on_overlay_plane_entered"]
 [connection signal="plane_entered" from="overlay" to="Flamme2" method="_on_overlay_plane_entered"]
 [connection signal="attack_connect" from="Flamme" to="Flamme2" method="_on_flamme_attack_connect"]
-[connection signal="attack_connect" from="Flamme2" to="Flamme" method="_on_flamme_2_attack_connect"]
+[connection signal="ledge_grab" from="Boundary/Platforms" to="Flamme" method="_on_platforms_ledge_grab"]
+[connection signal="ledge_grab" from="Boundary/Platforms" to="Flamme2" method="_on_platforms_ledge_grab"]
+
+[editable path="Boundary"]

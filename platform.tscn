@@ -4,13 +4,13 @@
 [ext_resource type="Script" uid="uid://bfacaqtbfuvq1" path="res://bottom.gd" id="2_s8bxr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8yqoa"]
-size = Vector3(4, 0.1, 1)
+size = Vector3(4, 0.1, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1dc58"]
 size = Vector3(0.5091553, 0.5625, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
-size = Vector3(4, 1.1325302, 1)
+size = Vector3(4, 0.748, 2)
 
 [node name="Platform" type="StaticBody3D" unique_id=1021640525 node_paths=PackedStringArray("plat_col", "area")]
 script = ExtResource("1_mi635")
@@ -18,6 +18,7 @@ plat_col = NodePath("Platform")
 area = NodePath("Bottom")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1825655574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0)
 layers = 9
 size = Vector3(4, 0.1, 1)
 
@@ -50,7 +51,7 @@ collision_mask = 3842
 script = ExtResource("2_s8bxr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bottom" unique_id=2038167207]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.41407394, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.32857507, 0)
 shape = SubResource("BoxShape3D_nh15l")
 
 [connection signal="body_exited" from="ledge_grab_left" to="." method="_on_ledge_grab_left_body_exited"]
