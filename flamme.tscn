@@ -1,13 +1,14 @@
 [gd_scene format=3 uid="uid://xgx2ndsnmgkv"]
 
 [ext_resource type="Script" uid="uid://bmwqubgvgxdq0" path="res://flamme.gd" id="1_iowp4"]
-[ext_resource type="PackedScene" uid="uid://dnpobrevrjuls" path="res://flame_bottom.tscn" id="2_0yf33"]
+[ext_resource type="PackedScene" uid="uid://c27ej1mjoav0p" path="res://fire_cone.tscn" id="2_0yf33"]
 [ext_resource type="PackedScene" uid="uid://cst5j4t6v0ldo" path="res://male_body.glb" id="2_qnre3"]
 [ext_resource type="PackedScene" uid="uid://cjgk0uuda7en2" path="res://thrown_sword.tscn" id="3_rk06u"]
 [ext_resource type="PackedScene" uid="uid://dus8i43ic345n" path="res://_impact.tscn" id="4_0yf33"]
 [ext_resource type="PackedScene" uid="uid://cqg1ok3o02jow" path="res://fire_slash.tscn" id="4_rk06u"]
 [ext_resource type="PackedScene" uid="uid://bxiqbh73q21uo" path="res://d_jump.tscn" id="5_uhbh6"]
 [ext_resource type="PackedScene" uid="uid://v7yypyovj0cb" path="res://fire.tscn" id="6_qnre3"]
+[ext_resource type="Texture2D" uid="uid://cleopx8whi1wm" path="res://Textures/fire_texture.png" id="6_uhbh6"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_iowp4"]
 velocity_pivot = Vector3(0, 0, -1)
@@ -25,6 +26,7 @@ blend_mode = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.7162252, 0.24660802, 0, 1)
+albedo_texture = ExtResource("6_uhbh6")
 billboard_mode = 3
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
@@ -32,7 +34,6 @@ particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_qnre3"]
 material = SubResource("StandardMaterial3D_ekh2h")
-size = Vector2(0.5, 0.5)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rk06u"]
 radius = 0.40527344

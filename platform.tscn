@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://b4rs3kgncc1mj" path="res://platform.gd" id="1_mi635"]
 [ext_resource type="Script" uid="uid://bfacaqtbfuvq1" path="res://bottom.gd" id="2_s8bxr"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oi3di"]
+albedo_color = Color(0.84313726, 0.007843138, 0.007843138, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_8yqoa"]
 size = Vector3(4, 0.1, 2)
 
@@ -21,6 +24,7 @@ area = NodePath("Bottom")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0)
 layers = 9
 size = Vector3(4, 0.1, 1)
+material = SubResource("StandardMaterial3D_oi3di")
 
 [node name="Platform" type="CollisionShape3D" parent="." unique_id=1470874282]
 shape = SubResource("BoxShape3D_8yqoa")

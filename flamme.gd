@@ -487,6 +487,8 @@ func _physics_process(delta: float) -> void:
 		flame_particle.emitting = true
 	else:
 		flame_particle.emitting = false
+	if "charge" not in attack_type:
+		skin.material_overlay = null
 func land():
 	print("land")
 	landing_lag = 15
@@ -510,6 +512,7 @@ func on_hit( y_rot, base_damage, kb_mult, at):
 				iframes = 8
 			if at == "neutral_1" or at == "neutral_2":
 				iframes = 1
+				knockback = Vector3(2.0, 1.0,0.0)
 			if at == "neutral_3":
 				iframes = 16
 				knockback = Vector3(12.0, 3.0,0.0)
@@ -533,6 +536,7 @@ func on_hit( y_rot, base_damage, kb_mult, at):
 				child.restart()
 			stun = 20
 func respawn(pos):
+	print("so we respawining")
 	position = Vector3(0.0, pos.y, 0.0)
 	velocity = Vector3.ZERO
 	total_damage = 0
@@ -598,6 +602,7 @@ func _on_platforms_ledge_grab(body,gposition, dir) -> void:
 
 func _on_overlay_plane_entered(body,pos) -> void:
 	if body.name == name:
+		print("WAHOOOOO")
 		respawn_count = 30
 		respawn_pos = pos
 		needs_respawn = true

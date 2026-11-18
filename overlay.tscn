@@ -9,7 +9,7 @@ size = Vector3(100, 1, 100)
 script = ExtResource("1_nv86q")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1105035010]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.396, 20.374413)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.396, 19.039139)
 
 [node name="Area3D" type="Area3D" parent="." unique_id=834456425]
 collision_layer = 3

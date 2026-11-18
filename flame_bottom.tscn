@@ -1,5 +1,13 @@
 [gd_scene format=3 uid="uid://dnpobrevrjuls"]
 
+[ext_resource type="Shader" uid="uid://6qgu20pmprdy" path="res://flame_cyl.gdshader" id="1_7tbi3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uhbh6"]
+render_priority = 0
+shader = ExtResource("1_7tbi3")
+shader_parameter/time = 0.0
+
 [node name="Node3D" type="Node3D" unique_id=102497886]
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=737332452]
+process_material = SubResource("ShaderMaterial_uhbh6")
