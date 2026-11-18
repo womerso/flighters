@@ -575,7 +575,7 @@ func _on_flamme_attack_connect(target, y_rot, base_damage, base_knockback, at) -
 	pass # Replace with function body.
 
 
-func _on_flamme_2_attack_connect(target, y_rot, base_damage, base_knockback, at) -> void:
+func on_enemy_attack_connect(target, y_rot, base_damage, base_knockback, at) -> void:
 	print(iframes)
 	if target==name:
 		if not is_shield and iframes <= 0:

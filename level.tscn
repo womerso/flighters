@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b4acg2ut3fwwg"]
 
 [ext_resource type="PackedScene" uid="uid://xgx2ndsnmgkv" path="res://flamme.tscn" id="4_0b4ue"]
+[ext_resource type="PackedScene" uid="uid://ct1ldfua3xtp5" path="res://Rocktop.tscn" id="4_1ainy"]
 [ext_resource type="PackedScene" uid="uid://tkaf3iuing11" path="res://overlay.tscn" id="4_f2txt"]
 [ext_resource type="PackedScene" uid="uid://bx8q2jftkp785" path="res://boundary.tscn" id="4_n6hdu"]
 
@@ -29,19 +30,13 @@ shadow_enabled = true
 [node name="overlay" parent="." unique_id=1228735558 node_paths=PackedStringArray("p1", "p2") instance=ExtResource("4_f2txt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00730896, 8.121346, 0.025032043)
 p1 = NodePath("../Flamme")
-p2 = NodePath("../Flamme2")
+p2 = NodePath("../Rocktop")
 
 [node name="Flamme" parent="." unique_id=667861679 instance=ExtResource("4_0b4ue")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.00730896, 9.872727, 0.025032043)
 collision_layer = 2
 collision_mask = 5
 player_id = 1
-
-[node name="Flamme2" parent="." unique_id=851777768 instance=ExtResource("4_0b4ue")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4.3557096, 9.786843, 0.025032043)
-collision_layer = 2
-collision_mask = 5
-player_id = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=59120679]
 environment = SubResource("Environment_nh15l")
@@ -70,10 +65,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.925691, -62.379677, 0.025
 [node name="Platform3" parent="Boundary/Platforms" parent_id_path=PackedInt32Array(879918400, 670145773) index="4" unique_id=631030529]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.047309, -62.379677, 0.025032043)
 
+[node name="Rocktop" parent="." unique_id=962601119 instance=ExtResource("4_1ainy")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.9009695, 9.865727, 0)
+collision_layer = 2
+collision_mask = 5
+player_id = 2
+
 [connection signal="plane_entered" from="overlay" to="Flamme" method="_on_overlay_plane_entered"]
-[connection signal="plane_entered" from="overlay" to="Flamme2" method="_on_overlay_plane_entered"]
-[connection signal="attack_connect" from="Flamme" to="Flamme2" method="_on_flamme_attack_connect"]
+[connection signal="plane_entered" from="overlay" to="Rocktop" method="_on_overlay_plane_entered"]
+[connection signal="attack_connect" from="Flamme" to="Rocktop" method="_on_flamme_attack_connect"]
 [connection signal="ledge_grab" from="Boundary/Platforms" to="Flamme" method="_on_platforms_ledge_grab"]
-[connection signal="ledge_grab" from="Boundary/Platforms" to="Flamme2" method="_on_platforms_ledge_grab"]
+[connection signal="ledge_grab" from="Boundary/Platforms" to="Rocktop" method="_on_platforms_ledge_grab"]
+[connection signal="attack_connect" from="Rocktop" to="Flamme" method="on_enemy_attack_connect"]
 
 [editable path="Boundary"]

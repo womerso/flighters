@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://br22q8tl7g631"]
+
+[ext_resource type="Script" uid="uid://gkih6xc2g44f" path="res://title_screen.gd" id="1_v6p8y"]
+
+[sub_resource type="Environment" id="Environment_nh15l"]
+background_mode = 1
+background_color = Color(2.8878452e-07, 0.52867013, 0.5448156, 1)
+
+[node name="Node3D" type="Node3D" unique_id=302326873]
+script = ExtResource("1_v6p8y")
+
+[node name="Label" type="Label3D" parent="." unique_id=1929660764]
+pixel_size = 2.735
+text = "Flighters"
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=127381519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -11.502853, 159.40689)
+
+[node name="Label2" type="Label3D" parent="." unique_id=1908942129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -88.63127, 0)
+pixel_size = 1.0
+text = "Press Start"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1015536662]
+environment = SubResource("Environment_nh15l")

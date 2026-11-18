@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://buulvfjr20sep"]
+
+[sub_resource type="World3D" id="World3D_xbh0h"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nh15l"]
+
+[node name="Node3D" type="Node3D" unique_id=1865840817]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1347258937]
+world_3d = SubResource("World3D_xbh0h")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="SubViewport" unique_id=158559212]
+material = SubResource("StandardMaterial3D_nh15l")
