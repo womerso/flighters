@@ -2,9 +2,21 @@
 
 [ext_resource type="PackedScene" uid="uid://xgx2ndsnmgkv" path="res://flamme.tscn" id="1_b8hy4"]
 [ext_resource type="Script" uid="uid://ccb5fnlbts20v" path="res://idle_pose.gd" id="2_n5q46"]
+[ext_resource type="PackedScene" uid="uid://ct1ldfua3xtp5" path="res://Rocktop.tscn" id="3_lcv4y"]
+[ext_resource type="PackedScene" uid="uid://blcosgqtgjkg4" path="res://rock_slide.tscn" id="4_umr4q"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_b8hy4"]
 size = Vector2(5, 5)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_qwx6n"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1dc58"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_qwx6n")
+
+[sub_resource type="QuadMesh" id="QuadMesh_8yqoa"]
+material = SubResource("StandardMaterial3D_1dc58")
 
 [node name="Node3D" type="Node3D" unique_id=647156118]
 
@@ -14,9 +26,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2586553)
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1895642255]
 
 [node name="Flamme" parent="SubViewport" unique_id=667861679 instance=ExtResource("1_b8hy4")]
-transform = Transform3D(0.98993117, 0, -0.14154953, 0, 1, 0, 0.14154953, 0, 0.98993117, -0.0927223, 0.46965623, -0.6218314)
+transform = Transform3D(0.98993117, 0, -0.14154953, 0, 1, 0, 0.14154953, 0, 0.98993117, 4.9908433, 0.46965623, -0.6218314)
 
-[node name="Skeleton3D" parent="SubViewport/Flamme/male_body/Skinned Mesh 0" parent_id_path=PackedInt32Array(667861679, 35373313, 258071070) index="1" unique_id=51637266]
+[node name="Skeleton3D" parent="SubViewport/Flamme/male_body/Skinned Mesh 0" parent_id_path=PackedInt32Array(667861679, 35373313, 2031633394) index="1" unique_id=1577748803]
 bones/0/rotation = Quaternion(-0.7071068, 1.0116325e-30, -1.0116325e-30, 0.7071068)
 bones/1/position = Vector3(0.005316938, 0.08649447, 0.8771722)
 bones/1/rotation = Quaternion(0.755931, -0.088295184, -0.07525498, 0.64428943)
@@ -92,7 +104,7 @@ bones/64/rotation = Quaternion(-0.5777089, -0.049668998, -0.16396327, 0.79806113
 bones/65/rotation = Quaternion(-0.00013698026, 0.9643066, -0.26478794, -0.00049950916)
 bones/66/rotation = Quaternion(1.5459955e-07, -3.4562287e-08, 3.2988947e-08, 1)
 
-[node name="Mesh_0_001" parent="SubViewport/Flamme/male_body/Skinned Mesh 0/Skeleton3D" index="0" unique_id=948301291]
+[node name="Mesh_0_001" parent="SubViewport/Flamme/male_body/Skinned Mesh 0/Skeleton3D" index="0" unique_id=1106744885]
 script = ExtResource("2_n5q46")
 
 [node name="BoneAttachment3D" parent="SubViewport/Flamme/male_body/Skinned Mesh 0/Skeleton3D" index="1" unique_id=159661750]
@@ -101,28 +113,49 @@ transform = Transform3D(-0.25232857, 0.42405275, -0.86977565, 0.23858568, 0.8983
 [node name="Sword2" parent="SubViewport/Flamme/male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box" parent_id_path=PackedInt32Array(667861679, 1257548223) index="0" unique_id=1257548223]
 visible = false
 
-[node name="Neutral" parent="SubViewport/Flamme/male_body/Skinned Mesh 0" parent_id_path=PackedInt32Array(667861679, 35373313, 258071070) index="2" unique_id=1476862253]
+[node name="Neutral" parent="SubViewport/Flamme/male_body/Skinned Mesh 0" parent_id_path=PackedInt32Array(667861679, 35373313, 2031633394) index="2" unique_id=1476862253]
 visible = false
 
 [node name="Fire" parent="SubViewport/Flamme/male_body/Skinned Mesh 0/Neutral" index="0" unique_id=39111617]
 visible = false
 lifetime = 1.0
 
-[node name="Sword" parent="SubViewport/Flamme/male_body" parent_id_path=PackedInt32Array(667861679, 35373313) index="1" unique_id=1172006396]
+[node name="Sword" parent="SubViewport/Flamme/male_body" parent_id_path=PackedInt32Array(667861679, 35373313) index="1" unique_id=1858992518]
 transform = Transform3D(-0.16774878, 0.5948609, -0.054222945, -0.37277874, -0.060249023, 0.4922865, 0.46672988, 0.16567963, 0.37370244, 0.437913, 4.4588733, 4.533734)
 
 [node name="FireParticles" parent="SubViewport/Flamme/male_body" parent_id_path=PackedInt32Array(667861679, 35373313) index="3" unique_id=1791440466]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.100679785, 1.0483735, -0.7754427)
-visible = false
 draw_pass_1 = SubResource("QuadMesh_b8hy4")
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=1659820499]
-transform = Transform3D(0.93624157, 0.0017680095, -0.3513526, 0.0011623945, 0.9999663, 0.0081292465, 0.35135514, -0.008019349, 0.93620795, -0.42230666, 1.9816558, 0.15692532)
+transform = Transform3D(0.93624157, 0.0017680095, -0.3513526, 0.0011623945, 0.9999663, 0.0081292465, 0.35135514, -0.008019349, 0.93620795, 4.6579456, 1.9816558, 0.15692532)
 fov = 62.1
 near = 0.015
 far = 6.08
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport" unique_id=59526097]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.089176, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=903378821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0103645325)
+mesh = SubResource("QuadMesh_8yqoa")
+
+[node name="SubViewport2" type="SubViewport" parent="." unique_id=1463972611]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport2" unique_id=390076118]
+transform = Transform3D(0.93624157, 0.0017680095, -0.3513526, 0.0011623945, 0.9999663, 0.0081292465, 0.35135514, -0.008019349, 0.93620795, 9.291498, 1.9816558, 0.15692532)
+fov = 62.1
+near = 0.015
+far = 6.08
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport2" unique_id=1188665269]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.722729, 0, 0)
+
+[node name="Rocktop" parent="SubViewport2" unique_id=721641620 instance=ExtResource("3_lcv4y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.852081, 0, -0.51394504)
+
+[node name="RockArea" parent="SubViewport2/Rocktop" unique_id=588811282 instance=ExtResource("4_umr4q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55317724, -1.1142082)
 
 [editable path="SubViewport/Flamme"]
 [editable path="SubViewport/Flamme/male_body"]
@@ -130,3 +163,8 @@ far = 6.08
 [editable path="SubViewport/Flamme/male_body/FireParticles"]
 [editable path="SubViewport/Flamme/_impact"]
 [editable path="SubViewport/Flamme/d_jump"]
+[editable path="SubViewport2/Rocktop"]
+[editable path="SubViewport2/Rocktop/male_body"]
+[editable path="SubViewport2/Rocktop/male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"]
+[editable path="SubViewport2/Rocktop/_impact"]
+[editable path="SubViewport2/Rocktop/d_jump"]

@@ -1,26 +1,31 @@
 [gd_scene format=3 uid="uid://blcosgqtgjkg4"]
 
 [ext_resource type="Script" uid="uid://crbv316yspaov" path="res://rock_slide.gd" id="1_sb6pt"]
+[ext_resource type="Texture2D" uid="uid://ckbbsragtxy7n" path="res://Textures/earth.png" id="2_bkbnh"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh15l"]
 size = Vector3(0.59375, 1.6062012, 1)
 
+[sub_resource type="Gradient" id="Gradient_uc02j"]
+colors = PackedColorArray(0.3682485, 0.13693434, 0, 1, 0.54209, 0, 0.10873478, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_yfsnq"]
+gradient = SubResource("Gradient_uc02j")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nh15l"]
-emission_shape = 6
-emission_ring_axis = Vector3(0, 0, 1)
-emission_ring_height = 1.0
-emission_ring_radius = 0.3
-emission_ring_inner_radius = 0.0
-emission_ring_cone_angle = 90.0
+emission_shape = 1
+emission_sphere_radius = 1.0
 direction = Vector3(10, 0, 0)
+color_ramp = SubResource("GradientTexture1D_yfsnq")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4r3aq"]
-albedo_color = Color(0.35994306, 0.17332175, 7.219613e-08, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y36no"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_bkbnh")
+albedo_texture_force_srgb = true
 
-[sub_resource type="SphereMesh" id="SphereMesh_xbh0h"]
-material = SubResource("StandardMaterial3D_4r3aq")
-radius = 0.2
-height = 0.4
+[sub_resource type="QuadMesh" id="QuadMesh_7b2rf"]
+material = SubResource("StandardMaterial3D_y36no")
 
 [node name="RockArea" type="Area3D" unique_id=588811282]
 script = ExtResource("1_sb6pt")
@@ -33,4 +38,4 @@ shape = SubResource("BoxShape3D_nh15l")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2497107, 0)
 amount = 100
 process_material = SubResource("ParticleProcessMaterial_nh15l")
-draw_pass_1 = SubResource("SphereMesh_xbh0h")
+draw_pass_1 = SubResource("QuadMesh_7b2rf")
