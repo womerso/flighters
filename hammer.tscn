@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://vhk7um6nwsl"]
+
+[ext_resource type="PackedScene" uid="uid://c74a760j5mjbt" path="res://Models/two_handed_hammer.glb" id="1_qnip4"]
+[ext_resource type="ArrayMesh" uid="uid://0h2rdw1arsps" path="res://hammer_mesh.tres" id="2_7mb5m"]
+
+[node name="Sketchfab_Scene" unique_id=1717320853 instance=ExtResource("1_qnip4")]
+
+[node name="pasted__pasted__pCylinder1_lambert1_0" parent="Sketchfab_model/aba5643b43cc420db462ec4ed29fbc4c_fbx/RootNode/group1/pasted__pasted__pCylinder1" parent_id_path=PackedInt32Array(1122930798) index="0" unique_id=509978032]
+mesh = ExtResource("2_7mb5m")

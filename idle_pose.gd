@@ -1,4 +1,6 @@
 @tool
+
+# "Two Handed Hammer" (https://skfb.ly/6XtHY) by Nick Neissa is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 extends MeshInstance3D
 
 

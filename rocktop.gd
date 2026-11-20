@@ -7,7 +7,7 @@ extends CharacterBody3D
 @export var platforms: Node3D
 @onready var hit_part: Node3D = $_impact
 @onready var jump_part: Node3D = $d_jump
-@onready var neutral_attack: Node3D = $male_body/Neutral
+@onready var neutral_attack: Node3D = $RockTop/Neutral
 
 const SPEED = 10.08
 const JUMP_VELOCITY = 18#Was 12
@@ -65,15 +65,17 @@ var total_damage = 0
 var flame_floor
 var flame_scale = 0.0;
 var moving_rocks
+var trail_shader: ShaderMaterial 
 @export var flame_effect: PackedScene
 var blink_shader = null
 @export var thrown_sword_scene: PackedScene
 @export var rockslide: PackedScene
-@onready var held_sword = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"
-@onready var sword_hitbox = $"male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box/sword_box"
-@onready var skin: MeshInstance3D = $"male_body/Skinned Mesh 0/Skeleton3D/Mesh_0_001"
+@onready var held_sword = $"RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001/sword_box"
+@onready var sword_hitbox = $"RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001/sword_box/sword_box"
+@onready var skin: MeshInstance3D = $"RockTop/Skinned Mesh 0/Skeleton3D/Mesh_0_001"
+@onready var trail: GPUTrail3D = $"RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001/sword_box/Sword2/HammerTrail2"
 @export var fire_slash: PackedScene
-@onready var flame_particle: GPUParticles3D = $male_body/FireParticles
+
 var prev_input_x = []
 func _ready():
 	axis_lock_linear_z = true
@@ -95,7 +97,7 @@ func _ready():
 		blink_shader = ShaderMaterial.new()
 		blink_shader.shader = shader
 
-
+	trail_shader = trail.process_material
 func get_anim_state():
 	return #anim_tree.get("parameters/playback").get_current_node()
 
@@ -169,8 +171,7 @@ func _physics_process(delta: float) -> void:
 				else:
 					attack_count = 1
 				animations.play("Sword_Regular_%s" % c)
-				slash_effect = fire_slash.instantiate()
-				sword_hitbox.add_child(slash_effect)
+
 			if velocity.x != 0 and 0.0 not in prev_input_x:
 				animations.play("SprintAttack")
 				attacking = true
@@ -476,6 +477,15 @@ func _physics_process(delta: float) -> void:
 
 	if "charge" not in attack_type:
 		skin.material_overlay = null
+
+	if attacking and trail.length != 30:
+		trail.length = 30
+	elif not attacking and trail.length != 1:
+		trail.length = 1
+	print(trail.length)
+	print(trail.emitting)
+
+
 func land():
 	print("land")
 	landing_lag = 15

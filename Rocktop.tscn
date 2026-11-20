@@ -1,13 +1,48 @@
 [gd_scene format=3 uid="uid://ct1ldfua3xtp5"]
 
 [ext_resource type="Script" uid="uid://dbxuyyeta2jgv" path="res://rocktop.gd" id="1_nvv5l"]
-[ext_resource type="PackedScene" uid="uid://c27ej1mjoav0p" path="res://fire_cone.tscn" id="2_c8ka1"]
 [ext_resource type="PackedScene" uid="uid://cjgk0uuda7en2" path="res://thrown_sword.tscn" id="3_irq6r"]
 [ext_resource type="PackedScene" uid="uid://blcosgqtgjkg4" path="res://rock_slide.tscn" id="4_5d6cl"]
-[ext_resource type="PackedScene" uid="uid://cqg1ok3o02jow" path="res://fire_slash.tscn" id="4_uikx4"]
-[ext_resource type="PackedScene" uid="uid://cst5j4t6v0ldo" path="res://male_body.glb" id="5_ixoey"]
+[ext_resource type="Shader" uid="uid://bd7548qsqohd8" path="res://GPUTrail-main/shaders/trail.gdshader" id="6_c8ka1"]
+[ext_resource type="ArrayMesh" uid="uid://0h2rdw1arsps" path="res://hammer_mesh.tres" id="7_50doq"]
+[ext_resource type="Shader" uid="uid://bacmssrnqe62x" path="res://GPUTrail-main/shaders/trail_draw_pass.gdshader" id="7_irq6r"]
 [ext_resource type="PackedScene" uid="uid://dus8i43ic345n" path="res://_impact.tscn" id="8_dd23r"]
+[ext_resource type="Texture2D" uid="uid://crk6pkb7e5rwc" path="res://GPUTrail-main/defaults/texture.tres" id="8_irq6r"]
+[ext_resource type="Script" uid="uid://dy2p65c3oodp5" path="res://GPUTrail-main/GPUTrail3D.gd" id="8_uikx4"]
 [ext_resource type="PackedScene" uid="uid://bxiqbh73q21uo" path="res://d_jump.tscn" id="9_3acem"]
+[ext_resource type="PackedScene" uid="uid://c36so1b6jxgij" path="res://rock_top_model.tscn" id="12_uikx4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ixoey"]
+shader = ExtResource("6_c8ka1")
+
+[sub_resource type="Gradient" id="Gradient_g37y3"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_y1q3w"]
+gradient = SubResource("Gradient_g37y3")
+
+[sub_resource type="Curve" id="Curve_dd23r"]
+bake_resolution = 16
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.62096775, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_3acem"]
+curve = SubResource("Curve_dd23r")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uipou"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("7_irq6r")
+shader_parameter/tex = ExtResource("8_irq6r")
+shader_parameter/mask_strength = 1.0
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/color_ramp = SubResource("GradientTexture1D_y1q3w")
+shader_parameter/curve = SubResource("CurveTexture_3acem")
+shader_parameter/emmission_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/flags = 44
+
+[sub_resource type="QuadMesh" id="QuadMesh_f3ga6"]
+material = SubResource("ShaderMaterial_uipou")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_euapr"]
 radius = 0.46679688
@@ -423,33 +458,41 @@ states/up_smash_end/position = Vector2(1598.3796, 153.47394)
 transitions = ["Start", "Idle_A", SubResource("AnimationNodeStateMachineTransition_srroo"), "Idle_A", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_vsly7"), "Idle_A", "Sprint", SubResource("AnimationNodeStateMachineTransition_i7nax"), "Jump_Start", "Jump_air", SubResource("AnimationNodeStateMachineTransition_r65xg"), "Jump_air", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_rm53x"), "Jump_Land", "Idle_A", SubResource("AnimationNodeStateMachineTransition_0weew"), "Jump_Land", "Sprint", SubResource("AnimationNodeStateMachineTransition_fx21v"), "Sprint", "Idle_A", SubResource("AnimationNodeStateMachineTransition_m7deo"), "Sprint", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_b6np5"), "Jump_Start", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_47dk5"), "Jump_Land", "Jump_Start", SubResource("AnimationNodeStateMachineTransition_xbuf8"), "Jump_air", "BackFlip", SubResource("AnimationNodeStateMachineTransition_d2tew"), "BackFlip", "Jump_air", SubResource("AnimationNodeStateMachineTransition_ymd2p"), "BackFlip", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_pg2he"), "Jump_Start", "BackFlip", SubResource("AnimationNodeStateMachineTransition_5eqnl"), "Sword_Regular_A", "Sword_Regular_B", SubResource("AnimationNodeStateMachineTransition_khax6"), "Sword_Regular_B", "Sword_Regular_C", SubResource("AnimationNodeStateMachineTransition_iaeel"), "Sword_Regular_A", "Idle_A", SubResource("AnimationNodeStateMachineTransition_7tyr5"), "Sword_Regular_A", "Sprint", SubResource("AnimationNodeStateMachineTransition_6o7y1"), "Sword_Regular_B", "Idle_A", SubResource("AnimationNodeStateMachineTransition_dca2o"), "Sword_Regular_B", "Sprint", SubResource("AnimationNodeStateMachineTransition_ddo45"), "Sword_Regular_C", "Idle_A", SubResource("AnimationNodeStateMachineTransition_i62ky"), "Sword_Regular_C", "Sprint", SubResource("AnimationNodeStateMachineTransition_4hklp"), "Sprint", "Sword_Regular_A", SubResource("AnimationNodeStateMachineTransition_paasm"), "Idle_A", "Sword_Regular_A", SubResource("AnimationNodeStateMachineTransition_v5lxm"), "Jump_Start", "UPB", SubResource("AnimationNodeStateMachineTransition_3yn0x"), "Jump_air", "UPB", SubResource("AnimationNodeStateMachineTransition_pguq3"), "BackFlip", "UPB", SubResource("AnimationNodeStateMachineTransition_hesft"), "UPB", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_a1u4y"), "UPB", "Jump_air", SubResource("AnimationNodeStateMachineTransition_qeliu"), "Idle_A", "UPB", SubResource("AnimationNodeStateMachineTransition_jhqdh"), "Sprint", "UPB", SubResource("AnimationNodeStateMachineTransition_rvyho"), "Idle_A", "Crouch_Idle", SubResource("AnimationNodeStateMachineTransition_e45un"), "Sprint", "Crouch_Idle", SubResource("AnimationNodeStateMachineTransition_yvv0j"), "Crouch_Idle", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_yt5n0"), "Crouch_Walk", "Crouch_Idle", SubResource("AnimationNodeStateMachineTransition_5eqwk"), "Crouch_Walk", "Sprint", SubResource("AnimationNodeStateMachineTransition_hxwmv"), "Crouch_Walk", "Idle_A", SubResource("AnimationNodeStateMachineTransition_34d74"), "Crouch_Idle", "Idle_A", SubResource("AnimationNodeStateMachineTransition_c6b6a"), "Sprint", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_vse2i"), "Idle_A", "Crouch_Walk", SubResource("AnimationNodeStateMachineTransition_xx738"), "Jump_Start", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_3dm8k"), "UPB", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_ceikp"), "Jump_air", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_5i4aj"), "BackFlip", "Ledge_Hang", SubResource("AnimationNodeStateMachineTransition_v2840"), "Ledge_Hang", "Idle_A", SubResource("AnimationNodeStateMachineTransition_1scf1"), "Idle_A", "Jump_air", SubResource("AnimationNodeStateMachineTransition_nxfbs"), "Sprint", "Jump_air", SubResource("AnimationNodeStateMachineTransition_nx1i8"), "Idle_A", "Sword_Regular_B", SubResource("AnimationNodeStateMachineTransition_foe5a"), "Sprint", "Sword_Regular_B", SubResource("AnimationNodeStateMachineTransition_4rrfo"), "Idle_A", "Sword_Regular_C", SubResource("AnimationNodeStateMachineTransition_y0s5e"), "Sprint", "Sword_Regular_C", SubResource("AnimationNodeStateMachineTransition_dk281"), "Hit_Knockback", "Idle_A", SubResource("AnimationNodeStateMachineTransition_vy4bs"), "Hit_Chest", "Idle_A", SubResource("AnimationNodeStateMachineTransition_xjcyp"), "Spell_Simple_Enter", "Spell_Simple_Idle", SubResource("AnimationNodeStateMachineTransition_xugtl"), "Spell_Simple_Idle", "Spell_Simple_Exit", SubResource("AnimationNodeStateMachineTransition_nnukc"), "Spell_Simple_Exit", "Idle_A", SubResource("AnimationNodeStateMachineTransition_61b3d"), "Spell_Simple_Enter", "Spell_Simple_Exit", SubResource("AnimationNodeStateMachineTransition_02sdu"), "air_neutral", "Jump_Land", SubResource("AnimationNodeStateMachineTransition_fcb0p"), "air_neutral", "Jump_air", SubResource("AnimationNodeStateMachineTransition_id204"), "side_b_leave", "Idle_A", SubResource("AnimationNodeStateMachineTransition_81c6y"), "Ledge_Hang", "Jump_air", SubResource("AnimationNodeStateMachineTransition_e2c7v"), "forward_smash_end", "Idle_A", SubResource("AnimationNodeStateMachineTransition_iowp4"), "up_smash_end", "Idle_A", SubResource("AnimationNodeStateMachineTransition_uhbh6")]
 graph_offset = Vector2(775.26013, 92.14886)
 
-[node name="Flamme" type="CharacterBody3D" unique_id=667861679 node_paths=PackedStringArray("pivot", "hitbox", "animations")]
+[node name="Rocktop" type="CharacterBody3D" unique_id=667861679 node_paths=PackedStringArray("pivot", "hitbox", "animations")]
 script = ExtResource("1_nvv5l")
-pivot = NodePath("male_body/Skinned Mesh 0")
+pivot = NodePath("RockTop/Skinned Mesh 0")
 hitbox = NodePath("hitBox")
-animations = NodePath("male_body/AnimationPlayer")
-flame_effect = ExtResource("2_c8ka1")
+animations = NodePath("RockTop/AnimationPlayer")
 thrown_sword_scene = ExtResource("3_irq6r")
 rockslide = ExtResource("4_5d6cl")
-fire_slash = ExtResource("4_uikx4")
 
-[node name="male_body" parent="." unique_id=35373313 instance=ExtResource("5_ixoey")]
+[node name="RockTop" parent="." unique_id=392462468 instance=ExtResource("12_uikx4")]
 
-[node name="BoneAttachment3D" type="BoneAttachment3D" parent="male_body/Skinned Mesh 0/Skeleton3D" parent_id_path=PackedInt32Array(35373313, 51637266) index="1" unique_id=159661750]
-transform = Transform3D(0.010276485, -0.5399499, 0.8416345, 0.9998202, 0.018957017, -4.6052533e-05, -0.015930032, 0.84148365, 0.5400477, -0.7499275, 1.4388446, -0.06833565)
-bone_name = "lowerarm_r.001"
-bone_idx = 53
-
-[node name="sword_box" parent="male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D" unique_id=1257548223 instance=ExtResource("3_irq6r")]
+[node name="sword_box" parent="RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001" parent_id_path=PackedInt32Array(392462468, 97983736) index="0" unique_id=489117702 instance=ExtResource("3_irq6r")]
 transform = Transform3D(-1.0241479, 0.9335334, -0.57413983, -0.8485385, -0.17809899, 1.2240355, 0.6936162, 1.1605155, 0.6496925, -0.028811276, 0.11072424, 0.016092002)
 collision_layer = 3845
 collision_mask = 3847
 
-[node name="Sword" parent="male_body" index="1" unique_id=1172006396]
-transform = Transform3D(0.14430746, 0.49705344, -0.3421296, 0.54165924, 0.048328746, 0.29868016, 0.26593426, -0.36815956, -0.42270225, -1.9118526, 4.378338, -3.8824222)
-visible = false
+[node name="Sword2" parent="RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001/sword_box" index="0" unique_id=1257548223]
+transform = Transform3D(0.028047979, -0.0057917684, 0.09581109, 0.08706983, 0.04354795, -0.022856582, -0.04039998, 0.08983333, 0.017257249, 0.0040053874, 0.06932765, 0.13012248)
+mesh = ExtResource("7_50doq")
 
-[node name="Neutral" type="Node3D" parent="male_body" unique_id=1663758837]
+[node name="HammerTrail2" type="GPUParticles3D" parent="RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001/sword_box/Sword2" index="1" unique_id=1062961380]
+transform = Transform3D(1, 0, -4.4703484e-08, 0, 1, 0, -5.2154064e-08, 1.4901161e-08, 1, -0.04054022, 4.139389, -0.46107543)
+amount = 30
+lifetime = 30.0
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ShaderMaterial_ixoey")
+draw_pass_1 = SubResource("QuadMesh_f3ga6")
+script = ExtResource("8_uikx4")
+length = 30
+length_seconds = 0.5
+color_ramp = SubResource("GradientTexture1D_y1q3w")
+curve = SubResource("CurveTexture_3acem")
+billboard = true
+_defaults_have_been_set = true
+metadata/_custom_type_script = "uid://dy2p65c3oodp5"
 
 [node name="hitBox" type="CollisionShape3D" parent="." unique_id=1989804524 groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00700119, 0.8839209, -0.005003685)
@@ -457,9 +500,7 @@ shape = SubResource("CapsuleShape3D_euapr")
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=339667534]
 active = false
-root_node = NodePath("../male_body")
 tree_root = SubResource("AnimationNodeStateMachine_h1jy8")
-anim_player = NodePath("../male_body/AnimationPlayer")
 parameters/conditions/attack_1 = false
 parameters/conditions/attack_2 = false
 parameters/conditions/attack_3 = false
@@ -482,11 +523,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0)
 [node name="d_jump" parent="." unique_id=1646664945 instance=ExtResource("9_3acem")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 
-[connection signal="body_entered" from="male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box" to="." method="_on_sword_box_body_entered"]
-[connection signal="body_exited" from="male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box" to="." method="_on_sword_box_body_exited"]
-[connection signal="animation_finished" from="male_body/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
-
-[editable path="male_body"]
-[editable path="male_body/Skinned Mesh 0/Skeleton3D/BoneAttachment3D/sword_box"]
+[editable path="RockTop"]
+[editable path="RockTop/Skinned Mesh 0/Skeleton3D/lowerarm_r_001/sword_box"]
 [editable path="_impact"]
 [editable path="d_jump"]
